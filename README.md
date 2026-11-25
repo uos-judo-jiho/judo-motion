@@ -57,7 +57,6 @@ CPU 렌더러(`core/raster.ts`)와 셰이더(`gpu/shader.ts`)는 같은 알고�
 
 ```
 pnpm run export -t seoi-nage --tori bear --uke cat --toriGi black --ukeGi red
-<judo-motion technique="seoi-nage" tori="bear" uke="cat" tori-gi="black"></judo-motion>
 ```
 
 뼈 길이(키, 팔다리 비율)를 바꾸려면 기술별 키프레임을 다시 맞춰야 합니다.
@@ -65,18 +64,38 @@ pnpm run export -t seoi-nage --tori bear --uke cat --toriGi black --ukeGi red
 ## 다른 프로젝트에서 쓰기
 
 ```
-pnpm pack:lib      # lib/ 빌드 + judo-motion-0.1.0.tgz 생성
+pnpm add https://github.com/uos-judo-jiho/judo-motion/releases/download/v0.1.0/judo-motion-0.1.0.tgz
 ```
 
-순수 HTML: `lib/judo-motion.js`를 복사해 웹 서버로 제공합니다.
+React 19 (SSR 지원):
 
-```html
-<script type="module" src="./judo-motion.js"></script>
-<judo-motion technique="seoi-nage" tori="bear" uke="cat" mat style="width:192px"></judo-motion>
+```tsx
+import { JudoMotion } from "judo-motion/react";
+
+<JudoMotion technique="seoi-nage" tori="bear" uke="cat" mat className="w-48" />;
 ```
 
-번들러: `pnpm add <경로>/judo-motion-0.1.0.tgz` 후 `import 'judo-motion'`. React + TypeScript는 `import 'judo-motion/react'`.
+그 외 번들러는 `import "judo-motion"` 후 `<judo-motion technique="seoi-nage"></judo-motion>`을 씁니다. 번들러가 없으면 Release의 `judo-motion.js` 하나를 `<script type="module">`로 불러옵니다.
 
-속성: `technique` `tori` `uke` `tori-gi` `uke-gi` `grid`(64/96/128) `fps`(0=화면 주사율) `speed` `paused` `mat`(빈 값/`wide`). 프로퍼티: `currentTime`(초), `info`. 목록: `TECHNIQUES` `CHARACTERS` `GIS`.
+- 속성: `technique` `tori` `uke` `tori-gi` `uke-gi` `grid`(64/96/128) `fps`(0=화면 주사율) `speed` `paused` `mat`(빈 값/`wide`)
+- 프로퍼티: `currentTime`(초) `info` `onFrame`
+- 목록과 검사: `TECHNIQUES` `CHARACTERS` `GIS` `isTechnique` `isCharacter` `isGi`
+- 타입: `TechniqueName` `CharacterId` `GiId` `JudoMotionElement` `JudoMotionProps`
 
-기술이나 캐릭터를 바꿨다면 `package.json`의 version을 올리고 다시 `pnpm pack:lib` 하세요.
+### 릴리스
+
+`package.json`의 version을 올려 병합한 뒤 같은 이름의 태그를 올리면 Release가 만들어집니다.
+
+```
+git tag v0.1.1 && git push origin v0.1.1
+```
+
+## 개발
+
+oxlint, oxfmt, TypeScript 7, tsdown을 씁니다. `pnpm check`가 CI와 같은 검사를 합니다.
+
+공개 id는 `src/ids.ts`에 먼저 추가합니다. 데이터가 빠지거나 오타가 있으면 컴파일이나 테스트가 실패합니다.
+
+## 라이선스
+
+[MIT](./LICENSE)

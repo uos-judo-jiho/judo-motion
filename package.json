@@ -1,40 +1,68 @@
 {
   "name": "judo-motion",
-  "description": "GPU pixel-art judo technique animations as a web component",
-  "private": true,
   "version": "0.1.0",
-  "type": "module",
-  "packageManager": "pnpm@12.22.0",
-  "engines": {
-    "node": ">=22.18"
+  "private": true,
+  "description": "GPU pixel-art judo technique animations as a web component",
+  "homepage": "https://github.com/uos-judo-jiho/judo-motion",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/uos-judo-jiho/judo-motion.git"
   },
   "files": [
-    "lib"
+    "dist"
   ],
+  "type": "module",
   "sideEffects": true,
   "exports": {
-    ".": {
-      "types": "./lib/index.d.ts",
-      "default": "./lib/judo-motion.js"
+    ".": "./dist/index.js",
+    "./react": "./dist/react.js",
+    "./standalone": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/standalone.js"
     },
-    "./react": {
-      "types": "./lib/react.d.ts",
-      "default": "./lib/judo-motion.js"
-    }
+    "./package.json": "./package.json"
   },
   "scripts": {
     "dev": "vite",
-    "build": "tsc --noEmit && vite build",
+    "build": "pnpm build:lib && pnpm build:app",
+    "build:lib": "rm -rf dist && tsdown",
+    "build:app": "vite build",
     "preview": "vite preview",
+    "type-check": "tsc --noEmit",
+    "lint": "oxlint --type-aware --max-warnings=0",
+    "lint:fix": "oxlint --type-aware --fix",
+    "format": "oxfmt .",
+    "format:check": "oxfmt --check .",
     "test": "node --test test/*.test.ts",
+    "check": "pnpm format:check && pnpm lint && pnpm type-check && pnpm test",
     "export": "node server/cli.ts",
-    "build:lib": "tsc --noEmit && vite build --config vite.lib.config.ts",
-    "pack:lib": "pnpm build:lib && pnpm pack"
+    "prepack": "pnpm build:lib",
+    "clean": "rm -rf dist dist-app"
   },
   "devDependencies": {
+    "@arethetypeswrong/core": "^0.18.5",
     "@types/node": "^26.6.7",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "galmuri": "^2.40.3",
+    "oxfmt": "^0.80.0",
+    "oxlint": "^1.95.0",
+    "oxlint-tsgolint": "^7.0.2008",
+    "publint": "^0.3.25",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "tsdown": "^0.23.7",
     "typescript": "^7.0.2",
-    "vite": "^8.3.8",
-    "galmuri": "^2.40.3"
-  }
+    "vite": "^8.3.8"
+  },
+  "peerDependencies": {
+    "react": ">=19"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    }
+  },
+  "packageManager": "pnpm@12.22.0"
 }
