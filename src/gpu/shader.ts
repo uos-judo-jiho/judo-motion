@@ -1,6 +1,6 @@
-import { LINE } from '../core/palette.ts';
-import { LIGHT } from '../core/raster.ts';
-import { WORLD } from '../core/rig.ts';
+import { LINE } from "../core/palette.ts";
+import { LIGHT } from "../core/raster.ts";
+import { WORLD } from "../core/rig.ts";
 
 /** One instanced quad per visible animation; every instance reads its primitives from one float texture row. */
 export const VERT = `#version 300 es
@@ -15,7 +15,7 @@ void main() {
 }`;
 
 // Same algorithm as core/raster.ts: capsule SDFs one contour per group, occlusion by per-pixel depth.
-export const FRAG = `#version 300 es
+export const FRAG: string = `#version 300 es
 precision highp float; precision highp int; precision highp sampler2D;
 uniform sampler2D uPrims;
 flat in vec4 vTile; flat in vec2 vState;

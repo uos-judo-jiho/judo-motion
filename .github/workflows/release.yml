@@ -1,0 +1,37 @@
+name: Release
+
+# v0.1.0 같은 태그를 올리면 검사 후 설치용 tgz 와 단일 js 를 Release 에 올린다.
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "24"
+      - name: Check that the tag matches package.json
+        env:
+          TAG: ${{ github.ref_name }}
+        run: |
+          VERSION="v$(node -p 'require("./package.json").version')"
+          if [ "$TAG" != "$VERSION" ]; then
+            echo "::error::태그 $TAG 와 package.json 버전 $VERSION 이 다릅니다."
+            exit 1
+          fi
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm check
+      - run: pnpm pack
+      - run: cp dist/standalone.js judo-motion.js
+      - name: Create release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.ref_name }}
+        run: gh release create "$TAG" judo-motion-*.tgz judo-motion.js --title "$TAG" --generate-notes

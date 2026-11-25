@@ -1,6 +1,6 @@
 node_modules
 dist
-lib
-*.tgz
+dist-app
 exports
+*.tgz
 .DS_Store
