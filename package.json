@@ -1,0 +1,40 @@
+{
+  "name": "judo-motion",
+  "description": "GPU pixel-art judo technique animations as a web component",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "packageManager": "pnpm@12.22.0",
+  "engines": {
+    "node": ">=22.18"
+  },
+  "files": [
+    "lib"
+  ],
+  "sideEffects": true,
+  "exports": {
+    ".": {
+      "types": "./lib/index.d.ts",
+      "default": "./lib/judo-motion.js"
+    },
+    "./react": {
+      "types": "./lib/react.d.ts",
+      "default": "./lib/judo-motion.js"
+    }
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "test": "node --test test/*.test.ts",
+    "export": "node server/cli.ts",
+    "build:lib": "tsc --noEmit && vite build --config vite.lib.config.ts",
+    "pack:lib": "pnpm build:lib && pnpm pack"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.7",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.8",
+    "galmuri": "^2.40.3"
+  }
+}

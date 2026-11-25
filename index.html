@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>유도 모션 도감</title>
+  <link rel="icon" href="data:,">
+  <script type="module" src="/src/main.ts"></script>
+</head>
+<body>
+  <header>
+    <h1>유도 모션 도감</h1>
+    <p id="gpu" aria-live="off"></p>
+  </header>
+  <main>
+    <section class="stage" aria-label="재생 화면">
+      <div class="wall"><judo-motion id="hero" technique="seoi-nage" mat="wide"></judo-motion></div>
+      <div class="scrub">
+        <input id="seek" type="range" min="0" max="1" step="0.001" value="0" aria-label="재생 위치">
+        <ol id="phases"></ol>
+      </div>
+    </section>
+    <section class="panel">
+      <div class="title">
+        <p id="ja" lang="ja"></p>
+        <h2 id="ko"></h2>
+        <p id="meta"></p>
+        <p id="note"></p>
+      </div>
+      <div class="controls">
+        <fieldset id="variant" hidden><legend>방식</legend></fieldset>
+        <button id="play" class="primary">멈춤</button>
+        <fieldset id="speed"><legend>속도</legend></fieldset>
+        <fieldset id="fps"><legend>프레임</legend></fieldset>
+        <fieldset id="grid"><legend>도트 크기</legend></fieldset>
+        <fieldset id="mat"><legend>다다미</legend></fieldset>
+      </div>
+      <div class="cast">
+        <h3>캐릭터</h3>
+        <fieldset id="tori"><legend>공격자</legend></fieldset>
+        <fieldset id="toriGi"><legend>도복</legend></fieldset>
+        <fieldset id="uke"><legend>수비자</legend></fieldset>
+        <fieldset id="ukeGi"><legend>도복</legend></fieldset>
+        <div class="row"><button type="button" id="swap">서로 바꾸기</button><button type="button" id="shuffle">무작위</button><button type="button" id="reset">기본</button></div>
+      </div>
+      <form id="export">
+        <h3>파일로 내보내기</h3>
+        <label>형식 <select name="format"><option value="gif">GIF</option><option value="webp">WebP</option><option value="apng">APNG</option><option value="mp4">MP4 (배경 포함)</option><option value="webm">WebM (투명)</option></select></label>
+        <label>크기 <select name="size"><option>64</option><option>96</option><option>128</option><option>192</option><option selected>256</option><option>384</option><option>512</option><option>768</option></select></label>
+        <label>fps <select name="fps"><option>10</option><option>20</option><option selected>25</option><option>50</option></select></label>
+        <label class="check"><input type="checkbox" name="mat"> 다다미 바닥 포함</label>
+        <button class="primary">내보내기</button>
+        <button type="button" id="reveal">폴더 열기</button>
+        <output id="result"></output>
+      </form>
+    </section>
+    <section class="library">
+      <h3>기술 목록</h3>
+      <ul id="cards"></ul>
+    </section>
+    <section class="sizes">
+      <h3>이모지 크기로 보기</h3>
+      <div id="sizes"></div>
+    </section>
+  </main>
+</body>
+</html>
