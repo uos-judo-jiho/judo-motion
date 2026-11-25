@@ -1,0 +1,26 @@
+import type { Pose } from '../core/rig.ts';
+import type { Technique } from '../core/scene.ts';
+import { CARRIED, FALLEN, FINISH, HIGH, KUMI, feet, grip, opening, sideFall, ukeStand } from './common.ts';
+
+const STANCE = feet([34, 3.5], [25, -4]);
+const UKE: Pose = { ...ukeStand(29.5), feet: STANCE };
+
+export const uchiMata: Technique = {
+  id: 'uchi-mata', ko: '허벅다리걸기', ja: '内股', romaji: 'Uchi-mata', group: '발기술',
+  note: '오른발이 깊이 들어가고 왼발이 따라 들어간 뒤, 오른다리로 상대 안쪽 허벅다리를 차올려 메친다.',
+  ukemi: 'side', duration: 3.2, impact: { t: 1.68, x: 60, z: 8 }, poster: 1.22,
+  phases: [{ name: '기울이기', t: 0 }, { name: '들어가기', t: 0.24 }, { name: '걸기', t: 0.92 }, { name: '낙법', t: 1.68 }],
+  keys: [
+    ...opening(UKE, 50),
+    { t: 0.36, tori: { p: [49, 22, 0], yaw: 164, lean: 4, feet: feet([42, 0, 3], [54, 3]) }, uke: { ...UKE, lean: 5 }, toriGrip: KUMI, ukeGrip: KUMI },
+    { t: 0.5, tori: { elbowUp: 0.6, p: [48.5, 21, 1], yaw: 140, lean: 5, feet: feet([36.6, -0.5], [54, 3]) }, uke: { ...UKE, rot: 5, lean: 4 }, toriGrip: KUMI, ukeGrip: KUMI },
+    { t: 0.72, tori: { elbowUp: 1, p: [41.5, 21.6, 0.5], yaw: 80, lean: 6, feet: feet([36.6, -0.5], [48, -4, 3]) }, uke: { p: [30, 22.8, 0], yaw: 10, rot: 10, lean: 4, feet: STANCE }, toriGrip: HIGH, ukeGrip: CARRIED },
+    { t: 0.92, tori: { elbowUp: 1, p: [39.5, 21.8, 0], yaw: 22, lean: 24, feet: feet([36.6, -0.5], [42, -1.5]) }, uke: { p: [30.8, 23, 0.5], yaw: 15, rot: 17, lean: 3, feet: STANCE }, toriGrip: HIGH, ukeGrip: CARRIED },
+    { t: 1.06, tori: { elbowUp: 1, p: [40.5, 22.4, 0], yaw: 20, lean: 46, feet: feet([31, 1, 9], [42, -1.5]) }, uke: { p: [32.5, 26.5, 1], yaw: 16, rot: 44, legs: { r: [20, 4, 8], l: [-18, -30, 10] } }, toriGrip: HIGH, ukeGrip: CARRIED },
+    { t: 1.26, tori: { elbowUp: 1, p: [40.5, 22.8, 0], yaw: 20, lean: 80, head: -10, feet: feet([22, -1, 32], [42, -1.5]) }, uke: { p: [38, 36, 1.5], yaw: 18, rot: 102, legs: { r: [34, 14, 8], l: [-30, -44, 10] } }, toriGrip: HIGH, ukeGrip: CARRIED },
+    { t: 1.48, tori: { elbowUp: 1, p: [40.5, 22.8, 0], yaw: 20, lean: 94, feet: feet([22, -1, 33], [42, -1.5]) }, uke: { p: [57, 28, 5], yaw: 18, rot: 212, lean: 8, legs: { r: [30, 8, 8], l: [-20, -38, 10] } }, toriGrip: HIGH, ukeGrip: grip('held', 'rest') },
+    { t: 1.68, hit: true, tori: { elbowUp: 1, p: [40, 22.4, 0], yaw: 20, lean: 80, feet: feet([21, 0, 27], [42, -1.5]) }, uke: sideFall([63, 4.4, 9], 8, 270, 0), toriGrip: KUMI, ukeGrip: FALLEN },
+    { t: 2.05, tori: { p: [38, 21.2, 0], yaw: 20, lean: 52, feet: feet([31, 3], [42, -1.5]) }, uke: sideFall([63, 4.4, 9], 8, 270, 0.8), toriGrip: FINISH, ukeGrip: FALLEN },
+    { t: 3.2, tori: { p: [38, 21.6, 0], yaw: 20, lean: 44, feet: feet([31, 3], [42, -1.5]) }, uke: sideFall([63, 4.4, 9], 8, 270, 1), toriGrip: FINISH, ukeGrip: FALLEN },
+  ],
+};
