@@ -7,6 +7,7 @@ import type {
   Ref,
 } from "react";
 import type { JudoMotionElement, MatMode } from "./gpu/element.ts";
+import type { CameraView } from "./core/camera.ts";
 import type { CharacterId, GiId, Grid, TechniqueName } from "./ids.ts";
 
 export * from "./index.ts";
@@ -16,6 +17,7 @@ export interface JudoMotionProps extends Omit<
   "children"
 > {
   technique: TechniqueName;
+  view?: CameraView;
   /** Attacker and defender. */
   tori?: CharacterId;
   uke?: CharacterId;

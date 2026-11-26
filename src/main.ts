@@ -175,6 +175,16 @@ choices(
     if (v === "on") hero.setAttribute("mat", "wide");
   },
 );
+choices(
+  "view",
+  [
+    ["front", "정면"],
+    ["three-quarter", "사선"],
+    ["side", "측면"],
+  ],
+  "front",
+  (v) => hero.setAttribute("view", v),
+);
 
 // Characters: the same look is applied to every animation on the page.
 type CastKey = keyof typeof DEFAULT_IDS;
@@ -275,6 +285,7 @@ $<HTMLFormElement>("export").onsubmit = async (e) => {
   try {
     const r = await post("/api/export", {
       technique: hero.technique,
+      view: hero.view,
       ...cast,
       ...Object.fromEntries(new FormData(form)),
     });

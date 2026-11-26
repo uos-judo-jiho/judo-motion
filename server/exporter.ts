@@ -6,6 +6,8 @@ import { join } from "node:path";
 import { castSuffix, resolveCast } from "../src/characters/index.ts";
 import type { Cast, CastIds } from "../src/characters/index.ts";
 import { over, renderMat } from "../src/core/mat.ts";
+import { isCameraView } from "../src/core/camera.ts";
+import type { CameraView } from "../src/core/camera.ts";
 import { rasterize } from "../src/core/raster.ts";
 import { buildScene, createScene } from "../src/core/scene.ts";
 import { findTechnique } from "../src/techniques/index.ts";
@@ -33,6 +35,7 @@ export interface Job {
   format: Format;
   size: number;
   fps: number;
+  view: CameraView;
   mat: boolean;
   cast: Cast;
 }
@@ -42,11 +45,14 @@ const text = (v: unknown, fallback = ""): string =>
   typeof v === "string" || typeof v === "number" ? String(v) : fallback;
 
 export function parseJob(q: Record<string, unknown>): Job {
+  const view = text(q.view, "front");
+  if (!isCameraView(view)) throw new Error(`지원하지 않는 카메라: ${view}`);
   const job = {
     technique: text(q.technique),
     format: text(q.format, "gif") as Format,
     size: Number(q.size ?? 256),
     fps: Number(q.fps ?? 25),
+    view,
     mat: q.mat === true || q.mat === "on",
     cast: resolveCast(
       Object.fromEntries(
@@ -112,7 +118,7 @@ export async function exportJob(
   const tech = findTechnique(job.technique)!,
     grid = SIZES[job.size],
     frames = Math.round(tech.duration * job.fps);
-  const file = `${tech.id}${castSuffix(job.cast)}-${job.size}${job.mat ? "-mat" : ""}.${job.format === "apng" ? "png" : job.format}`,
+  const file = `${tech.id}${castSuffix(job.cast)}-${job.size}${job.view === "front" ? "" : `-${job.view}`}${job.mat ? "-mat" : ""}.${job.format === "apng" ? "png" : job.format}`,
     path = join(OUT_DIR, file);
   const scale = `scale=${job.size}:${job.size}:flags=neighbor`;
   const filter =
@@ -153,10 +159,10 @@ export async function exportJob(
   done.catch(() => {});
   ff.stdin.on("error", () => {});
   const scene = createScene(),
-    floor = job.mat ? renderMat(grid) : null;
+    floor = job.mat ? renderMat(grid, 1, job.view) : null;
   for (let i = 0; i < frames; i++) {
     const fighters = rasterize(
-        buildScene(tech, i / job.fps, scene, job.cast),
+        buildScene(tech, i / job.fps, scene, job.cast, job.view),
         grid,
       ),
       px = floor ? over(floor, fighters) : fighters;

@@ -1,6 +1,8 @@
 /** Technique data + time -> list of drawing primitives. Pure, shared by GPU and CPU renderers. */
 import { DEFAULT_CAST } from "../characters/index.ts";
 import type { Cast } from "../characters/index.ts";
+import { cameraDirection, cameraPoint } from "./camera.ts";
+import type { CameraView } from "./camera.ts";
 import { drawHead } from "../characters/head.ts";
 import { DUST, IMPACT, LINE } from "./palette.ts";
 import { solve } from "./physics.ts";
@@ -9,6 +11,7 @@ import type { Limb, V2, V3 } from "./rig.ts";
 import type { Technique } from "./types.ts";
 
 export type { Grip, Key, Phase, Technique } from "./types.ts";
+export type { CameraView } from "./camera.ts";
 export { solve } from "./physics.ts";
 
 /** Flat layout, 12 floats each: ax ay bx by | ra rb colour owner+8*group | za zb (depth) shade inner-line. Colours are 24-bit ints. */
@@ -25,17 +28,23 @@ export const createScene = (): Scene => ({
   dissolve: 0,
 });
 
-const depthOf = (l: Limb) => (l.a[2] + l.b[2] + l.c[2]) / 3;
+const depthOf = (l: Limb, view: CameraView) =>
+  (cameraPoint(l.a, view)[2] +
+    cameraPoint(l.b, view)[2] +
+    cameraPoint(l.c, view)[2]) /
+  3;
 
 export function buildScene(
   tech: Technique,
   time: number,
   out: Scene,
   cast: Cast = DEFAULT_CAST,
+  view: CameraView = "front",
 ): Scene {
   const t = ((time % tech.duration) + tech.duration) % tech.duration;
   const s = solve(tech, t);
   const { scale, center } = tech.camera ?? { scale: 1, center: WORLD / 2 };
+  const point = (p: V3): V3 => cameraPoint(p, view);
   let n = 0,
     tag = 0,
     bias = 0,
@@ -80,8 +89,20 @@ export function buildScene(
     rb: number,
     col: number,
     shade?: number,
-  ) =>
-    put2(project(a), project(b), ra, rb, col, shade, a[2] + bias, b[2] + bias);
+  ) => {
+    const ca = point(a),
+      cb = point(b);
+    put2(
+      project(ca),
+      project(cb),
+      ra,
+      rb,
+      col,
+      shade,
+      ca[2] + bias,
+      cb[2] + bias,
+    );
+  };
   const ball = (p: V3, r: number, col: number, shade?: number) =>
     put(p, p, r, r, col, shade);
 
@@ -90,7 +111,7 @@ export function buildScene(
   if (k >= 0 && k < 1) {
     tag = 0;
     const e = 1 - (1 - k) ** 2,
-      [gx, gy] = project([tech.impact.x, 0, tech.impact.z ?? 0]);
+      [gx, gy] = project(point([tech.impact.x, 0, tech.impact.z ?? 0]));
     for (const side of [-1, 1]) {
       for (let j = 0; j < 3; j++) {
         const p: V2 = [
@@ -123,13 +144,13 @@ export function buildScene(
       [cloth, clothD] = wear.cloth,
       [paw, pawD] = who.paws ?? who.skin,
       B = (r: number) => r * (who.bulk ?? 1);
-    const mid = (body.pelvis[2] + body.neck[2]) / 2;
+    const mid = (point(body.pelvis)[2] + point(body.neck)[2]) / 2;
     const part = (z: number, draw: () => void) =>
       parts.push({ z, owner, inner: wear.inner, draw });
     for (const side of SIDES) {
       const arm = arms[side],
-        az = depthOf(arm),
-        armFar = az < depthOf(arms[side === "r" ? "l" : "r"]) - 1.5;
+        az = depthOf(arm, view),
+        armFar = az < depthOf(arms[side === "r" ? "l" : "r"], view) - 1.5;
       part(az, () => {
         bias = 0.8; // sleeves lie on top of the cloth they grip
         const gi = armFar ? clothD : cloth,
@@ -141,8 +162,8 @@ export function buildScene(
         ball(arm.c, 1.7, skin);
       });
       const leg = body.legs[side],
-        lz = depthOf(leg),
-        legFar = lz < depthOf(body.legs[side === "r" ? "l" : "r"]) - 1.2;
+        lz = depthOf(leg, view),
+        legFar = lz < depthOf(body.legs[side === "r" ? "l" : "r"], view) - 1.2;
       part(lz - 0.4, () => {
         bias = -0.4;
         const gi = legFar ? clothD : cloth,
@@ -165,7 +186,7 @@ export function buildScene(
     part(mid, () => {
       bias = 0;
       const { at, shoulders, hips } = body,
-        facing = body.F[2];
+        facing = cameraDirection(body.F, view)[2];
       if (who.tail) {
         const lift = (p: V3): V3 => [p[0], Math.max(1.4, p[1]), p[2]],
           [a, b, c] = [at(-1, -2.5), lift(at(-2.5, -5.5)), lift(at(0.5, -7))];
@@ -184,8 +205,10 @@ export function buildScene(
           put(at(14, 1.4, -1.6), at(8, 3, 0.4), 0.6, 0.6, wear.inner);
       }
       // Belt: perpendicular to the spine as seen on screen.
-      const [cx, cy] = project(at(3.6, 0)),
-        [ux, uy] = project(at(6, 0)),
+      const beltCenter = point(at(3.6, 0)),
+        beltTop = point(at(6, 0)),
+        [cx, cy] = project(beltCenter),
+        [ux, uy] = project(beltTop),
         len = Math.hypot(ux - cx, uy - cy) || 1;
       const bx = (-(uy - cy) / len) * B(3.3),
         by = ((ux - cx) / len) * B(3.3);
@@ -196,7 +219,7 @@ export function buildScene(
         1,
         who.belt,
         who.belt,
-        at(3.6, 0)[2],
+        beltCenter[2],
       );
       if (facing > -0.35) {
         put(at(3.2, 3.2, 0), at(-0.6, 4.2, 1.2), 0.7, 0.7, who.belt);
@@ -204,7 +227,7 @@ export function buildScene(
           put(at(3.2, 3.2, 0), at(-0.6, 4.2, -1.2), 0.7, 0.7, who.belt);
       }
     });
-    part(body.head[2] + 0.6, () => {
+    part(point(body.head)[2] + 0.6, () => {
       bias = 0.6;
       drawHead({ put, ball }, body, who, LINE);
     });

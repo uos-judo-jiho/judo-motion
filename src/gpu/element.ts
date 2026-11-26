@@ -1,5 +1,7 @@
 import { DEFAULT_CAST, resolveCast } from "../characters/index.ts";
 import { renderMat } from "../core/mat.ts";
+import { isCameraView } from "../core/camera.ts";
+import type { CameraView } from "../core/camera.ts";
 import { TECHNIQUES, findTechnique, fullName } from "../techniques/index.ts";
 import { engine } from "./engine.ts";
 import type { View } from "./engine.ts";
@@ -23,7 +25,7 @@ const Base = (
 export type MatMode = boolean | "" | "wide";
 
 /**
- * <judo-motion technique="seoi-nage" grid="96" fps="0" speed="1"></judo-motion>
+ * <judo-motion technique="seoi-nage" view="side" grid="96" fps="0" speed="1"></judo-motion>
  * tori / uke: character ids, tori-gi / uke-gi: jacket colours. Looks only; the motion is the same.
  * mat / mat="wide": draw the tatami layer behind the fighters (wide spills past the frame).
  * Drop-in replacement for a GIF: transparent, loops, and shares one GPU context across the page.
@@ -31,6 +33,7 @@ export type MatMode = boolean | "" | "wide";
 export class JudoMotionElement extends Base {
   static readonly observedAttributes: readonly string[] = [
     "technique",
+    "view",
     "grid",
     "fps",
     "speed",
@@ -59,6 +62,7 @@ export class JudoMotionElement extends Base {
       canvas,
       ctx: canvas.getContext("2d")!,
       technique: TECHNIQUES[0],
+      view: "front",
       cast: DEFAULT_CAST,
       grid: 96,
       speed: 1,
@@ -96,6 +100,10 @@ export class JudoMotionElement extends Base {
         this.#label();
       }
     }
+    if (name === "view") {
+      if (value === null) v.view = "front";
+      else if (isCameraView(value)) v.view = value;
+    }
     if (name === "grid") {
       const g = GRIDS.find((x) => x === Number(value));
       if (g) {
@@ -107,7 +115,7 @@ export class JudoMotionElement extends Base {
     if (name === "speed") v.speed = Math.max(0, Number(value ?? 1) || 0);
     if (name === "paused") v.playing = value === null;
     if (/^(tori|uke)(-gi)?$/.test(name)) this.#recast();
-    if (name === "mat" || name === "grid") this.#paintMat();
+    if (name === "mat" || name === "grid" || name === "view") this.#paintMat();
     v.dirty = true;
     if (this.isConnected) engine().wake();
   }
@@ -142,7 +150,7 @@ export class JudoMotionElement extends Base {
       .getContext("2d")!
       .putImageData(
         new ImageData(
-          new Uint8ClampedArray(renderMat(grid, wide)),
+          new Uint8ClampedArray(renderMat(grid, wide, this.#view.view)),
           grid * wide,
           grid,
         ),
@@ -170,6 +178,12 @@ export class JudoMotionElement extends Base {
   // Frameworks assign properties rather than attributes when both exist, so each one reflects.
   get technique(): TechniqueId {
     return this.#view.technique.id;
+  }
+  get view(): CameraView {
+    return this.#view.view;
+  }
+  set view(v: CameraView) {
+    this.#reflect("view", v);
   }
   set technique(v: TechniqueName) {
     this.#reflect("technique", v);

@@ -17,6 +17,8 @@ export type {
   TechniqueName,
 } from "./ids.ts";
 export type { TechniqueInfo } from "./techniques/info.ts";
+export { CAMERA_VIEWS } from "./core/camera.ts";
+export type { CameraView } from "./core/camera.ts";
 
 export interface Option<Id extends string> {
   readonly id: Id;
