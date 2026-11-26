@@ -1,6 +1,13 @@
-# 유도 모션 도감
+| | | |
+| - | - | - |
+| <img width="256" height="256" alt="uchi-mata-256-mat" src="https://github.com/user-attachments/assets/abb8251e-4f9d-4a2f-b7d5-a864c6574255" /> | <img width="256" height="256" alt="tomoe-nage-256-mat" src="https://github.com/user-attachments/assets/12e2e488-5084-490a-8c8a-af1e11b98869" /> | <img width="256" height="256" alt="osoto-gari-256-mat" src="https://github.com/user-attachments/assets/04ac3287-e489-4dd7-990a-e82b039583a9" /> |
+| uchi mata | tomoe nage | osoto gari|
+| <img width="256" height="256" alt="seoi-nage-256-mat" src="https://github.com/user-attachments/assets/210b3acd-cc70-4dc5-945a-67e8bc9b4720" /> | <img width="256" height="256" alt="ko-uchi-gari-v1-256-mat" src="https://github.com/user-attachments/assets/adb01f89-f13a-4d1d-bad8-b8ada82c04fc" /> | |
+| seoi nage | ko uchi gari | |
 
-유도 기술을 5등신 도트 애니메이션으로 보여주는 로컬 도구입니다. 웹에서는 WebGL2로 실시간 렌더링하고, 파일은 로컬 ffmpeg로 내보냅니다.
+---
+
+## 개발 시작하기
 
 필요: [mise](https://mise.jdx.dev), ffmpeg. Node와 pnpm 버전은 `mise.toml`이 맞춰 줍니다.
 
