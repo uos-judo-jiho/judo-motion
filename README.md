@@ -101,7 +101,7 @@ import { JudoMotion } from "@uos-judo-jiho/judo-motion/react";
 
 - 속성: `technique` `view`(`front`/`three-quarter`/`side`) `tori` `uke` `tori-gi` `uke-gi` `grid`(64/96/128) `fps`(0=화면 주사율) `speed` `paused` `mat`(빈 값/`wide`)
 - 프로퍼티: `view` `currentTime`(초) `info` `onFrame`
-- 목록과 검사: `TECHNIQUES` `TECHNIQUE_CATEGORIES` `CHARACTERS` `GIS` `isTechnique` `isCharacter` `isGi`
+- 목록과 검사: `TECHNIQUES` `TECHNIQUE_CATEGORIES` `CHARACTERS` `GIS` `getTechniqueInfo` `isTechnique` `isCharacter` `isGi`
 - 타입: `TechniqueName` `CharacterId` `GiId` `JudoMotionElement` `JudoMotionProps`
 
 ### 기술 분류
@@ -119,6 +119,15 @@ const grappling = TECHNIQUES.filter(
 ```
 
 CLI의 `--category`는 말단 분류 ID뿐 아니라 `nage-waza` 같은 대분류와 `tachi-waza` 같은 중분류도 받습니다. `--technique`와 함께 지정하면 두 조건을 모두 충족하는 기술을 내보냅니다.
+
+재생 ID나 기본 이름으로 기술 하나를 찾으려면 `getTechniqueInfo`를 사용합니다. 기본 이름은 기본 변형으로 해석되며, 지원하지 않는 ID는 `undefined`를 반환합니다.
+
+```ts
+import { getTechniqueInfo } from "@uos-judo-jiho/judo-motion";
+
+const info = getTechniqueInfo("ko-uchi-gari");
+// info?.id === "ko-uchi-gari-v1"
+```
 
 ### 전체 기술 카탈로그
 
