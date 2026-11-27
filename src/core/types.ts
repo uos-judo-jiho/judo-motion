@@ -16,6 +16,9 @@ export type Grip =
   | "drawn"
   | "held"
   | "beside"
+  | "back-collar"
+  | "elbow-wrap"
+  | "pinned-arm"
   | "rest"
   | "slap";
 
@@ -32,15 +35,13 @@ export interface Phase {
   name: string;
   t: number;
 }
-export interface Technique {
+interface TechniqueData {
   id: TechniqueId;
   ko: string;
   ja: string;
   romaji: string;
   group: string;
   note: string;
-  /** How uke lands: on the side (default for right-handed throws) or flat on the back. */
-  ukemi: "side" | "back";
   /** One of several equally valid ways to do technique `of`. Numbers are labels, not progress. */
   variant?: { of: TechniqueBase; name: string; label: string };
   /** Tori leads uke into a step before entering, so entry is judged from 들어가기 instead of the start. */
@@ -54,7 +55,17 @@ export interface Technique {
   duration: number;
   phases: Phase[];
   keys: Key[];
-  impact: { t: number; x: number; z?: number };
   /** Time used for still thumbnails / reduced motion. */
   poster: number;
 }
+
+export type Technique = TechniqueData &
+  (
+    | {
+        kind?: "throw";
+        /** How uke lands after the throw. */
+        ukemi: "side" | "back";
+        impact: { t: number; x: number; z?: number };
+      }
+    | { kind: "osaekomi"; ukemi?: never; impact?: never }
+  );

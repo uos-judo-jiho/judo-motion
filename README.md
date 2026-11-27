@@ -21,6 +21,7 @@ pnpm run export -t seoi-nage --format webp --size 512  # 하나만
 pnpm run export -t ko-uchi-gari                        # 모든 방식(v1, v2)
 pnpm run export --mat                                  # 다다미 포함
 pnpm run export -t seoi-nage --view side               # 측면에서 내보내기
+pnpm run export -t kesa-gatame --view three-quarter --mat # 곁누르기 사선 뷰
 ```
 
 - `src/core/rig.ts` 좌우를 구분하는 3D 뼈대. 무릎은 한 방향 경첩
@@ -36,7 +37,7 @@ CPU 렌더러(`core/raster.ts`)와 셰이더(`gpu/shader.ts`)는 같은 알고�
 
 ## 동작 규칙
 
-모든 기술은 오른손잡이 기준이며 `test/rules.test.ts`가 검사합니다.
+메치기 기술은 오른손잡이 기준이며 `test/rules.test.ts`가 검사합니다.
 
 - 오른손은 가슴깃, 왼손은 소매깃. 메친 뒤 오른손을 소매깃으로 옮겨 잡는다.
 - 오른발이 먼저 들어가고 왼발이 따라간다. 들어가는 동안 상대는 제자리에 있다.
@@ -47,6 +48,8 @@ CPU 렌더러(`core/raster.ts`)와 셰이더(`gpu/shader.ts`)는 같은 알고�
 - 안뒷축걸기: 오른 발바닥으로 상대 오른발 뒤꿈치를 안쪽에서 쓴다. v1은 끌어서(`draws: true`), v2는 들어가서. v1·v2는 우열이 아니라 방식의 차이다.
 - 배대뒤치기: 오른발이 상대 두 발 사이로 깊이 들어가고, 따라오는 왼발을 배에 대어 누우며 머리 너머로 넘긴다. 마무리는 왼손만 소매를 잡는다(`keepsLapel`).
 - 허벅다리걸기: 오른발이 깊이 들어가고, 오른 팔꿈치는 하늘을 향한다.
+
+곁누르기(`kesa-gatame`)는 누르기(`kind: "osaekomi"`) 기술입니다. 매트 위에서 진입해 누르기를 유지하고, 받기가 엉덩이를 들어 탈출을 시도하면 지지를 유지한 상태로 대응합니다.
 
 ## 물리 규칙
 

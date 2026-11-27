@@ -9,6 +9,8 @@ import {
   noOffsets,
   sign,
   solveArm,
+  sub,
+  unit,
 } from "./rig.ts";
 import type { Body, Limb, Offsets, Pair, Pose, Side, V3 } from "./rig.ts";
 import type { Grip, Technique } from "./types.ts";
@@ -194,6 +196,19 @@ function gripPoint(
       return other.at(5, 7);
     case "beside":
       return other.at(20, 20, -2);
+    case "back-collar":
+      return other.at(17, -0.8, 5.4);
+    case "elbow-wrap":
+      return opposite
+        ? add(
+            add(mix(opposite.b, opposite.c, 0.08), other.R, -0.6),
+            other.F,
+            1.2,
+          )
+        : other.at(10, 4, -4.5 * k);
+    case "pinned-arm":
+      // Guide uke’s wrist outside tori’s torso while tori holds the sleeve near the elbow.
+      return self.at(1, 1.5, 21);
     case "rest":
       return self.at(-2, 1, 6.5 * k);
     case "slap":
@@ -256,9 +271,38 @@ export function assemble(
     r: target(a.toriGrip.r, b.toriGrip.r, "r", tori, uke, first),
     l: target(a.toriGrip.l, b.toriGrip.l, "l", tori, uke, first),
   };
+  // Lead with the elbow over uke’s left shoulder as the hand wraps back behind the neck.
+  const wrap =
+    (a.toriGrip.r === "back-collar" ? 1 - u : 0) +
+    (b.toriGrip.r === "back-collar" ? u : 0);
+  const clasp =
+    (a.toriGrip.l === "elbow-wrap" ? 1 - u : 0) +
+    (b.toriGrip.l === "elbow-wrap" ? u : 0);
   const toriArms = {
-    r: solveArm(tori, "r", toriTargets.r, ot.elbow.r),
-    l: solveArm(tori, "l", toriTargets.l, ot.elbow.l),
+    r: solveArm(
+      tori,
+      "r",
+      toriTargets.r,
+      ot.elbow.r,
+      wrap
+        ? {
+            direction: unit(sub(uke.at(14, 10, -12), tori.shoulders.r)),
+            weight: wrap,
+          }
+        : undefined,
+    ),
+    l: solveArm(
+      tori,
+      "l",
+      toriTargets.l,
+      ot.elbow.l,
+      clasp
+        ? {
+            direction: unit(sub(add(right.b, uke.R, 5), tori.shoulders.l)),
+            weight: clasp * 0.65,
+          }
+        : undefined,
+    ),
   };
   return {
     tori,

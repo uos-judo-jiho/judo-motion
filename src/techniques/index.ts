@@ -1,4 +1,5 @@
 import type { Technique } from "../core/scene.ts";
+import { kesaGatame } from "./kesa-gatame.ts";
 import { koUchiGariV1, koUchiGariV2 } from "./ko-uchi-gari.ts";
 import { osotoGari } from "./osoto-gari.ts";
 import { seoiNage } from "./seoi-nage.ts";
@@ -14,6 +15,7 @@ export const TECHNIQUES: Technique[] = [
   koUchiGariV1,
   koUchiGariV2,
   tomoeNage,
+  kesaGatame,
 ];
 /** The technique a variant belongs to; its own id when it has none. */
 export const baseId = (t: Pick<Technique, "id" | "variant">): TechniqueName =>

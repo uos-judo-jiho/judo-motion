@@ -41,6 +41,7 @@ const along = (p: V3, l: Limb) =>
   );
 
 for (const tech of TECHNIQUES) {
+  if (tech.kind === "osaekomi") continue;
   const kake = phase(tech, "걸기");
 
   test(`${tech.id}: right hand starts on the lapel, left on the sleeve`, () => {
@@ -198,6 +199,7 @@ for (const tech of TECHNIQUES) {
 
 test("osoto-gari: tori reaps uke's right leg with the right leg", () => {
   const tech = findTechnique("osoto-gari")!;
+  assert.ok(tech.impact);
   let best = Infinity,
     touching = 0;
   steps(phase(tech, "걸기"), tech.impact.t, (t) => {
@@ -317,8 +319,9 @@ test("a base id resolves to its variants", () => {
 });
 
 test("tomoe-nage: right foot deep between uke's feet, left sole on the belly, over the head", () => {
-  const tech = findTechnique("tomoe-nage")!,
-    kake = phase(tech, "걸기"),
+  const tech = findTechnique("tomoe-nage")!;
+  assert.ok(tech.impact);
+  const kake = phase(tech, "걸기"),
     s = solve(tech, kake);
   const pivot = s.tori.legs.r.c,
     feet = SIDES.map((k) => s.uke.legs[k].c);
