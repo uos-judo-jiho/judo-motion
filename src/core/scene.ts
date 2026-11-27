@@ -14,8 +14,9 @@ export type { Grip, Key, Phase, Technique } from "./types.ts";
 export type { CameraView } from "./camera.ts";
 export { solve } from "./physics.ts";
 
-/** Flat layout, 12 floats each: ax ay bx by | ra rb colour owner+8*group | za zb (depth) shade inner-line. Colours are 24-bit ints. */
+/** Flat layout, 12 floats each: ax ay bx by | ra rb colour owner+8*depthSorted+16*group | za zb (depth) shade inner-line. Colours are 24-bit ints. */
 export const STRIDE = 12;
+export const DEPTH_SORTED_GROUP = 8;
 export const MAX_PRIMS = 112;
 export interface Scene {
   data: Float32Array;
@@ -135,8 +136,13 @@ export function buildScene(
   }
 
   // Each part is one contour group. Occlusion is decided per pixel by depth; sorting only settles contour ties.
-  const parts: { z: number; owner: number; inner: number; draw: () => void }[] =
-    [];
+  const parts: {
+    z: number;
+    owner: number;
+    inner: number;
+    depthSorted: boolean;
+    draw: () => void;
+  }[] = [];
   for (const owner of [1, 2]) {
     const body = owner === 1 ? s.tori : s.uke,
       arms = owner === 1 ? s.toriArms : s.ukeArms,
@@ -146,8 +152,8 @@ export function buildScene(
       [paw, pawD] = who.paws ?? who.skin,
       B = (r: number) => r * (who.bulk ?? 1);
     const mid = (point(body.pelvis)[2] + point(body.neck)[2]) / 2;
-    const part = (z: number, draw: () => void) =>
-      parts.push({ z, owner, inner: wear.inner, draw });
+    const part = (z: number, draw: () => void, depthSorted = true) =>
+      parts.push({ z, owner, inner: wear.inner, depthSorted, draw });
     for (const side of SIDES) {
       const arm = arms[side],
         az = depthOf(arm, view),
@@ -184,59 +190,64 @@ export function buildScene(
         put(leg.b, hem, B(2.8), B(2.7), gi, clothD);
       });
     }
-    part(mid, () => {
-      bias = 0;
-      const { at, shoulders, hips } = body,
-        facing = cameraDirection(body.F, view)[2];
-      if (who.tail) {
-        const lift = (p: V3): V3 => [p[0], Math.max(1.4, p[1]), p[2]],
-          [a, b, c] = [at(-1, -2.5), lift(at(-2.5, -5.5)), lift(at(0.5, -7))];
-        put(a, b, 1.1, 1.1, who.skin[0], who.skin[1]);
-        put(b, c, 1.1, 0.9, who.skin[0], who.skin[1]);
-      }
-      put(body.neck, add(body.neck, body.up, 2.5), 1.7, 1.7, who.skin[1]);
-      put(shoulders.l, shoulders.r, B(2.5), B(2.5), cloth, clothD);
-      put(at(12, -0.2, -1), at(4, 0, -0.6), B(3.4), B(3.5), cloth, clothD);
-      put(at(12, -0.2, 1), at(4, 0, 0.6), B(3.4), B(3.5), cloth, clothD);
-      put(at(4, 0), at(-1.2, 0.2), B(3.6), B(3.6), cloth, clothD);
-      put(hips.l, hips.r, B(3.6), B(3.6), cloth, clothD);
-      if (facing > -0.35) {
-        put(at(14, 1.4, 1.6), at(5, 3, -1.2), 0.6, 0.6, wear.inner);
-        if (facing > 0.4)
-          put(at(14, 1.4, -1.6), at(8, 3, 0.4), 0.6, 0.6, wear.inner);
-      }
-      // Belt: perpendicular to the spine as seen on screen.
-      const beltCenter = point(at(3.6, 0)),
-        beltTop = point(at(6, 0)),
-        [cx, cy] = project(beltCenter),
-        [ux, uy] = project(beltTop),
-        len = Math.hypot(ux - cx, uy - cy) || 1;
-      const bx = (-(uy - cy) / len) * B(3.3),
-        by = ((ux - cx) / len) * B(3.3);
-      put2(
-        [cx - bx, cy - by],
-        [cx + bx, cy + by],
-        1,
-        1,
-        who.belt,
-        who.belt,
-        beltCenter[2],
-      );
-      if (facing > -0.35) {
-        put(at(3.2, 3.2, 0), at(-0.6, 4.2, 1.2), 0.7, 0.7, who.belt);
-        if (facing > 0.4)
-          put(at(3.2, 3.2, 0), at(-0.6, 4.2, -1.2), 0.7, 0.7, who.belt);
-      }
-    });
+    // Keep the belt and lapels painted over the torso.
+    part(
+      mid,
+      () => {
+        bias = 0;
+        const { at, shoulders, hips } = body,
+          facing = cameraDirection(body.F, view)[2];
+        if (who.tail) {
+          const lift = (p: V3): V3 => [p[0], Math.max(1.4, p[1]), p[2]],
+            [a, b, c] = [at(-1, -2.5), lift(at(-2.5, -5.5)), lift(at(0.5, -7))];
+          put(a, b, 1.1, 1.1, who.skin[0], who.skin[1]);
+          put(b, c, 1.1, 0.9, who.skin[0], who.skin[1]);
+        }
+        put(body.neck, add(body.neck, body.up, 2.5), 1.7, 1.7, who.skin[1]);
+        put(shoulders.l, shoulders.r, B(2.5), B(2.5), cloth, clothD);
+        put(at(12, -0.2, -1), at(4, 0, -0.6), B(3.4), B(3.5), cloth, clothD);
+        put(at(12, -0.2, 1), at(4, 0, 0.6), B(3.4), B(3.5), cloth, clothD);
+        put(at(4, 0), at(-1.2, 0.2), B(3.6), B(3.6), cloth, clothD);
+        put(hips.l, hips.r, B(3.6), B(3.6), cloth, clothD);
+        if (facing > -0.35) {
+          put(at(14, 1.4, 1.6), at(5, 3, -1.2), 0.6, 0.6, wear.inner);
+          if (facing > 0.4)
+            put(at(14, 1.4, -1.6), at(8, 3, 0.4), 0.6, 0.6, wear.inner);
+        }
+        // Belt: perpendicular to the spine as seen on screen.
+        const beltCenter = point(at(3.6, 0)),
+          beltTop = point(at(6, 0)),
+          [cx, cy] = project(beltCenter),
+          [ux, uy] = project(beltTop),
+          len = Math.hypot(ux - cx, uy - cy) || 1;
+        const bx = (-(uy - cy) / len) * B(3.3),
+          by = ((ux - cx) / len) * B(3.3);
+        put2(
+          [cx - bx, cy - by],
+          [cx + bx, cy + by],
+          1,
+          1,
+          who.belt,
+          who.belt,
+          beltCenter[2],
+        );
+        if (facing > -0.35) {
+          put(at(3.2, 3.2, 0), at(-0.6, 4.2, 1.2), 0.7, 0.7, who.belt);
+          if (facing > 0.4)
+            put(at(3.2, 3.2, 0), at(-0.6, 4.2, -1.2), 0.7, 0.7, who.belt);
+        }
+      },
+      false,
+    );
     part(point(body.head)[2] + 0.6, () => {
       bias = 0.6;
-      drawHead({ put, ball }, body, who, LINE);
+      drawHead({ put, ball }, body, who, LINE, view);
     });
   }
   parts
     .sort((a, b) => a.z - b.z)
     .forEach((p, i) => {
-      tag = p.owner + 8 * (i + 1);
+      tag = p.owner + (p.depthSorted ? DEPTH_SORTED_GROUP : 0) + 16 * (i + 1);
       inner = p.inner;
       p.draw();
     });

@@ -1,7 +1,7 @@
 /** CPU reference renderer for file export. Must stay in step with the shader in src/gpu/shader.ts. */
 import { LINE } from "./palette.ts";
 import { WORLD } from "./rig.ts";
-import { STRIDE } from "./scene.ts";
+import { DEPTH_SORTED_GROUP, STRIDE } from "./scene.ts";
 import type { Scene } from "./scene.ts";
 
 export const LIGHT = [-0.5, -0.866] as const;
@@ -77,12 +77,12 @@ export function rasterize(scene: Scene, grid: number): Uint8Array {
         const dist = Math.sqrt(ox * ox + oy * oy) - r,
           z = d[o + 8] + (d[o + 9] - d[o + 8]) * k;
         if (dist <= 0) {
-          gHit =
-            ox * LIGHT[0] + oy * LIGHT[1] < -0.38 * r ? d[o + 10] : d[o + 6];
-          gDepth = Math.max(
-            gDepth,
-            z + Math.sqrt(Math.max(0, r * r - ox * ox - oy * oy)),
-          );
+          const surface = z + Math.sqrt(Math.max(0, r * r - ox * ox - oy * oy));
+          if (!(tag & DEPTH_SORTED_GROUP) || surface >= gDepth) {
+            gHit =
+              ox * LIGHT[0] + oy * LIGHT[1] < -0.38 * r ? d[o + 10] : d[o + 6];
+          }
+          gDepth = Math.max(gDepth, surface);
         }
         if (dist < gMin) {
           gMin = dist;
