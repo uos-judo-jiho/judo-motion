@@ -1,4 +1,4 @@
-/** npm run export -- --format gif --size 256 [--technique seoi-nage] [--fps 25] [--mat] [--tori bear --uke cat --toriGi black --ukeGi red] */
+/** npm run export -- --format gif --size 256 [--technique seoi-nage] [--view side] [--fps 25] [--mat] [--tori bear --uke cat --toriGi black --ukeGi red] */
 import { parseArgs } from "node:util";
 import { TECHNIQUES, variantsOf } from "../src/techniques/index.ts";
 import { exportJob, parseJob } from "./exporter.ts";
@@ -14,6 +14,7 @@ const { values } = parseArgs({
     format: { type: "string", default: "gif" },
     size: { type: "string", default: "256" },
     fps: { type: "string", default: "25" },
+    view: { type: "string", default: "front" },
     mat: { type: "boolean", default: false },
     tori: { type: "string" },
     uke: { type: "string" },

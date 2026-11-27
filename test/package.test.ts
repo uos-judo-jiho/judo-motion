@@ -41,6 +41,7 @@ test("renders on the server with dashed attributes and a reserved box", () => {
   const html = renderToString(
     createElement(JudoMotion, {
       technique: "seoi-nage",
+      view: "side",
       tori: "bear",
       toriGi: "black",
       mat: true,
@@ -50,6 +51,7 @@ test("renders on the server with dashed attributes and a reserved box", () => {
   );
   assert.match(html, /^<judo-motion /);
   assert.match(html, /technique="seoi-nage"/);
+  assert.match(html, /view="side"/);
   assert.match(html, /tori-gi="black"/);
   assert.match(html, /class="size-48"/);
   assert.match(html, /aspect-ratio:1/);

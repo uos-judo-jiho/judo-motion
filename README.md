@@ -20,6 +20,7 @@ pnpm run export --format gif --size 128                # 전체 기술
 pnpm run export -t seoi-nage --format webp --size 512  # 하나만
 pnpm run export -t ko-uchi-gari                        # 모든 방식(v1, v2)
 pnpm run export --mat                                  # 다다미 포함
+pnpm run export -t seoi-nage --view side               # 측면에서 내보내기
 ```
 
 - `src/core/rig.ts` 좌우를 구분하는 3D 뼈대. 무릎은 한 방향 경첩
@@ -84,8 +85,8 @@ import { JudoMotion } from "judo-motion/react";
 
 그 외 번들러는 `import "judo-motion"` 후 `<judo-motion technique="seoi-nage"></judo-motion>`을 씁니다. 번들러가 없으면 Release의 `judo-motion.js` 하나를 `<script type="module">`로 불러옵니다.
 
-- 속성: `technique` `tori` `uke` `tori-gi` `uke-gi` `grid`(64/96/128) `fps`(0=화면 주사율) `speed` `paused` `mat`(빈 값/`wide`)
-- 프로퍼티: `currentTime`(초) `info` `onFrame`
+- 속성: `technique` `view`(`front`/`three-quarter`/`side`) `tori` `uke` `tori-gi` `uke-gi` `grid`(64/96/128) `fps`(0=화면 주사율) `speed` `paused` `mat`(빈 값/`wide`)
+- 프로퍼티: `view` `currentTime`(초) `info` `onFrame`
 - 목록과 검사: `TECHNIQUES` `CHARACTERS` `GIS` `isTechnique` `isCharacter` `isGi`
 - 타입: `TechniqueName` `CharacterId` `GiId` `JudoMotionElement` `JudoMotionProps`
 

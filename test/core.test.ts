@@ -3,9 +3,10 @@ import test from "node:test";
 import { FORMATS, parseJob } from "../server/exporter.ts";
 import { over, renderMat } from "../src/core/mat.ts";
 import { rasterize } from "../src/core/raster.ts";
+import { CAMERA_VIEWS, cameraPoint, worldPoint } from "../src/core/camera.ts";
 import { BONES, SIDES, length, sub } from "../src/core/rig.ts";
 import type { V3 } from "../src/core/rig.ts";
-import { buildScene, createScene, solve } from "../src/core/scene.ts";
+import { STRIDE, buildScene, createScene, solve } from "../src/core/scene.ts";
 import { TECHNIQUES } from "../src/techniques/index.ts";
 
 const near = (a: number, b: number, m: string) =>
@@ -113,16 +114,63 @@ test("tatami is a separate layer: transparent above the floor, never over the fi
       assert.deepEqual(both.slice(i, i + 4), fighters.slice(i, i + 4));
 });
 
+test("camera views share technique data and rotate the rendered 3D scene", () => {
+  const tech = TECHNIQUES.find((t) => t.id === "seoi-nage")!;
+  const keys = structuredClone(tech.keys);
+  const defaultFront = buildScene(tech, 1, createScene());
+  const front = buildScene(tech, 1, createScene(), undefined, "front"),
+    diagonal = buildScene(tech, 1, createScene(), undefined, "three-quarter"),
+    side = buildScene(tech, 1, createScene(), undefined, "side");
+  assert.ok(front.count > 0 && diagonal.count > 0 && side.count > 0);
+  assert.deepEqual(front, defaultFront);
+  assert.notDeepEqual(front.data, diagonal.data);
+  assert.notDeepEqual(front.data, side.data);
+  assert.deepEqual(cameraPoint([48, 12, 4], "front"), [48, 12, 4]);
+  for (const view of CAMERA_VIEWS) {
+    const original: V3 = [59, 12, -7],
+      restored = worldPoint(cameraPoint(original, view), view);
+    for (let axis = 0; axis < 3; axis++)
+      assert.ok(Math.abs(original[axis]! - restored[axis]!) < 1e-10);
+  }
+  assert.deepEqual(tech.keys, keys);
+});
+
+test("fighters stay in frame in every camera view", () => {
+  for (const tech of TECHNIQUES)
+    for (const view of CAMERA_VIEWS)
+      for (let time = 0; time < tech.duration; time += 1 / 30) {
+        const scene = buildScene(tech, time, createScene(), undefined, view);
+        for (let i = 0; i < scene.count; i++) {
+          const o = i * STRIDE,
+            r = Math.max(scene.data[o + 4]!, scene.data[o + 5]!);
+          assert.ok(
+            Math.min(scene.data[o]!, scene.data[o + 2]!) - r >= 0 &&
+              Math.max(scene.data[o]!, scene.data[o + 2]!) + r <= 96 &&
+              Math.min(scene.data[o + 1]!, scene.data[o + 3]!) - r >= 0 &&
+              Math.max(scene.data[o + 1]!, scene.data[o + 3]!) + r <= 96,
+            `${tech.id} clipped in ${view} at ${time.toFixed(2)}s`,
+          );
+        }
+      }
+});
+
+test("mat uses the same camera view and front remains the default", () => {
+  assert.deepEqual(renderMat(64), renderMat(64, 1, "front"));
+  assert.notDeepEqual(renderMat(64), renderMat(64, 1, "side"));
+});
+
 test("export jobs reject anything outside the allow-list", () => {
   assert.equal(
     FORMATS.includes(parseJob({ technique: "seoi-nage" }).format),
     true,
   );
+  assert.equal(parseJob({ technique: "seoi-nage", view: "side" }).view, "side");
   for (const bad of [
     { technique: "../x" },
     { technique: "seoi-nage", format: "exe" },
     { technique: "seoi-nage", size: 9999 },
     { technique: "seoi-nage", fps: 0 },
+    { technique: "seoi-nage", view: "orbit" },
   ])
     assert.throws(() => parseJob(bad));
 });

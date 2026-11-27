@@ -4,6 +4,7 @@
  * compositor (image-rendering: pixelated), so cost depends on art pixels, not screen pixels.
  */
 import { rasterize } from "../core/raster.ts";
+import type { CameraView } from "../core/camera.ts";
 import { MAX_PRIMS, STRIDE, buildScene, createScene } from "../core/scene.ts";
 import type { Grid } from "../ids.ts";
 import type { Cast } from "../characters/index.ts";
@@ -14,6 +15,7 @@ export interface View {
   canvas: HTMLCanvasElement;
   ctx: CanvasRenderingContext2D;
   technique: Technique;
+  view: CameraView;
   cast: Cast;
   grid: Grid;
   speed: number;
@@ -194,7 +196,7 @@ class Engine {
     batch.forEach((v, i) => {
       // Snap retro frame rates to whole frames.
       const t = v.fps ? Math.floor(v.time * v.fps + 1e-6) / v.fps : v.time;
-      buildScene(v.technique, t, scene, v.cast);
+      buildScene(v.technique, t, scene, v.cast, v.view);
       if (gl) {
         prims.set(scene.data, i * MAX_PRIMS * STRIDE);
         inst.set(
