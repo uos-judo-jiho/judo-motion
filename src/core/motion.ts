@@ -91,6 +91,12 @@ function track(
     ),
   });
   const tracks = { r: legs("r"), l: legs("l") };
+  const elbow = (s: Side) =>
+    poses.some((q) => q.elbowBias?.[s])
+      ? xyz((q) => q.elbowBias?.[s] ?? [0, 0, 0])
+      : undefined;
+  const rightElbow = elbow("r"),
+    leftElbow = elbow("l");
   const stillAt = (t: number, s: Side) => {
     let i = 0;
     while (i < ts.length - 2 && t >= ts[i + 1]) i++;
@@ -107,6 +113,9 @@ function track(
       p: p(t),
       ...Object.fromEntries(ch.map(([k, f]) => [k, f(t)])),
     } as unknown as Pose;
+    if (rightElbow || leftElbow) {
+      pose.elbowBias = { r: rightElbow?.(t), l: leftElbow?.(t) };
+    }
     const ankle = (s: Side): V3 =>
       a.feet && b.feet
         ? tracks[s].foot(t)

@@ -80,7 +80,15 @@ export const seoiNage: Technique = {
     },
     {
       t: 1.22,
-      tori: { p: [38.5, 20, 0], yaw: YAW, lean: 66, head: -10, feet: SET },
+      tori: {
+        // Keep the elbow on a continuous arc as uke rolls over the shoulder.
+        elbowBias: { r: [0.4, 1.1, 0.3] },
+        p: [38.5, 20, 0],
+        yaw: YAW,
+        lean: 66,
+        head: -10,
+        feet: SET,
+      },
       uke: {
         p: [40, 34, 3],
         yaw: YAW,
@@ -92,8 +100,16 @@ export const seoiNage: Technique = {
     },
     {
       t: 1.44,
-      tori: { p: [37.5, 20, 0], yaw: YAW, lean: 88, feet: SET },
+      tori: {
+        elbowBias: { r: [-1.2, -1.1, 1.4] },
+        p: [37.5, 20, 0],
+        yaw: YAW,
+        lean: 88,
+        feet: SET,
+      },
       uke: {
+        // Keep the free elbow clear of tori’s head as uke turns over.
+        elbowBias: { l: [0, 0, 1.4] },
         p: [59, 24, 9],
         yaw: 28,
         rot: 228,
@@ -107,7 +123,10 @@ export const seoiNage: Technique = {
       t: 1.6,
       hit: true,
       tori: { p: [37.5, 19.4, 0], yaw: YAW, lean: 74, feet: SET },
-      uke: sideFall([62, 4.4, 9], 8, 270, 0),
+      uke: {
+        ...sideFall([62, 4.2, 9], 8, 270, 0),
+        elbowBias: { l: [0, 0, 1.4] },
+      },
       toriGrip: KUMI,
       ukeGrip: FALLEN,
     },

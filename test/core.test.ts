@@ -4,7 +4,7 @@ import { FORMATS, parseJob } from "../server/exporter";
 import { over, renderMat } from "../src/core/mat";
 import { rasterize } from "../src/core/raster";
 import { CAMERA_VIEWS, cameraPoint, worldPoint } from "../src/core/camera";
-import { BONES, SIDES, length, sub } from "../src/core/rig";
+import { BONES, SIDES, dot, length, sub } from "../src/core/rig";
 import type { V3 } from "../src/core/rig";
 import {
   DEPTH_SORTED_GROUP,
@@ -36,6 +36,19 @@ for (const tech of TECHNIQUES) {
           near(dist(b.legs[k].a, b.legs[k].b), BONES.THIGH, "thigh");
           near(dist(b.legs[k].b, b.legs[k].c), BONES.SHIN, "shin");
         }
+    }));
+
+  test(`${tech.id}: head decorations use a rigid local frame`, () =>
+    each(tech.duration, (t) => {
+      const { tori, uke } = solve(tech, t);
+      for (const { look, up, headRight } of [tori, uke]) {
+        near(length(look), 1, "head forward length");
+        near(length(up), 1, "head up length");
+        near(length(headRight), 1, "head right length");
+        near(dot(look, up), 0, "head forward and up");
+        near(dot(look, headRight), 0, "head forward and right");
+        near(dot(up, headRight), 0, "head up and right");
+      }
     }));
 
   test(`${tech.id}: nobody sinks into the mat`, () =>

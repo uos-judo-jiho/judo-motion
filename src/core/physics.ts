@@ -22,6 +22,7 @@ import type { Technique } from "./types";
 
 export type Part =
   | "torso"
+  | "shoulders"
   | "head"
   | `${Side}${"Thigh" | "Shin" | "Upper" | "Fore"}`;
 export interface Capsule {
@@ -34,6 +35,7 @@ export interface Capsule {
 /** Solid core of each part. Cloth and flesh outside this may press together. */
 const RADIUS = {
   torso: 3.3,
+  shoulders: 1.9,
   head: 4,
   Thigh: 2.7,
   Shin: 2.1,
@@ -48,6 +50,13 @@ export function capsules(b: Body, arms: Pair<Limb>): Capsule[] {
       a: b.pelvis,
       b: b.at(BONES.SHOULDER - 0.8, 0),
       r: RADIUS.torso,
+    },
+    // The torso centreline does not cover the full width of the shoulder girdle.
+    {
+      part: "shoulders",
+      a: b.shoulders.l,
+      b: b.shoulders.r,
+      r: RADIUS.shoulders,
     },
     { part: "head", a: b.head, b: b.head, r: RADIUS.head },
   ];
@@ -72,8 +81,8 @@ export function capsules(b: Body, arms: Pair<Limb>): Capsule[] {
 
 /** Closest points between two segments: parameters along each and the vector from B to A. */
 export function closest(
-  A: Capsule,
-  B: Capsule,
+  A: Pick<Capsule, "a" | "b">,
+  B: Pick<Capsule, "a" | "b">,
 ): { s: number; t: number; d: V3; dist: number } {
   const u = sub(A.b, A.a),
     v = sub(B.b, B.a),
@@ -98,6 +107,7 @@ export function closest(
 const isArm = (p: Part) => p.endsWith("Upper") || p.endsWith("Fore");
 /** Arms wrap around the opponent on purpose; they only have to stay out of the trunk and head. */
 export const collides = (a: Part, b: Part): boolean => {
+  if (a === "shoulders" || b === "shoulders") return a === b;
   if (isArm(a) && isArm(b)) return false;
   if (isArm(a)) return b === "torso" || b === "head";
   if (isArm(b)) return a === "torso" || a === "head";
@@ -114,7 +124,10 @@ export const overlap = (A: Capsule, B: Capsule): number =>
 /** Move whatever can move so that the point `u` along `part` shifts by `d`. */
 function push(o: Offsets, intent: Intent, part: Part, u: number, d: V3) {
   const side = part[0] as Side;
-  if (part === "torso") {
+  if (part === "shoulders") {
+    shift(o.spine, d, 0.55);
+    shift(o.root, d, 0.25);
+  } else if (part === "torso") {
     shift(o.root, d, 0.8);
     shift(o.spine, d, 0.35 * u);
   } else if (part === "head") {

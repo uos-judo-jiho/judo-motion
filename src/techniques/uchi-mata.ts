@@ -134,6 +134,8 @@ export const uchiMata: Technique = {
         feet: feet([22, -1, 33], [42, -1.5]),
       },
       uke: {
+        // Keep uke’s right elbow on the same side while the sleeve grip changes.
+        elbowBias: { r: [0, -0.45, 0] },
         p: [57, 28, 5],
         yaw: 18,
         rot: 212,
@@ -153,7 +155,10 @@ export const uchiMata: Technique = {
         lean: 80,
         feet: feet([21, 0, 27], [42, -1.5]),
       },
-      uke: sideFall([63, 4.4, 9], 8, 270, 0),
+      uke: {
+        ...sideFall([63, 4.4, 9], 8, 270, 0),
+        elbowBias: { r: [0, -0.45, 0] },
+      },
       toriGrip: KUMI,
       ukeGrip: FALLEN,
     },

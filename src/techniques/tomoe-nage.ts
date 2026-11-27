@@ -188,6 +188,8 @@ export const tomoeNage: Technique = {
         feet: feet(DEEP, [28, -0.5, 20]),
       },
       uke: {
+        // Guide the left elbow through the release into the breakfall.
+        elbowBias: { l: [-0.9, 0.9, 0] },
         p: [51.5, 35, 4],
         yaw: 8,
         rot: 188,
@@ -199,6 +201,8 @@ export const tomoeNage: Technique = {
     {
       t: 1.34,
       tori: {
+        // Follow the sleeve without suddenly swinging the elbow around the wrist.
+        elbowBias: { l: [0, 0.9, 0.9] },
         p: [29.8, 6.2, -3.5],
         yaw: 180,
         rot: -104,
@@ -207,6 +211,7 @@ export const tomoeNage: Technique = {
         feet: feet(DEEP, [26.5, -1, 18]),
       },
       uke: {
+        elbowBias: { l: [-0.9, 0.9, 0] },
         p: [66, 26, 5],
         yaw: 8,
         rot: 226,
@@ -219,6 +224,7 @@ export const tomoeNage: Technique = {
       t: 1.48,
       hit: true,
       tori: {
+        elbowBias: { l: [0, 0.9, 0.9] },
         p: [30, 6, -4],
         yaw: 180,
         rot: -103,
