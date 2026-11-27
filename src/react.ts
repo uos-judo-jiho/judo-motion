@@ -6,11 +6,11 @@ import type {
   ReactElement,
   Ref,
 } from "react";
-import type { JudoMotionElement, MatMode } from "./gpu/element.ts";
-import type { CameraView } from "./core/camera.ts";
-import type { CharacterId, GiId, Grid, TechniqueName } from "./ids.ts";
+import type { JudoMotionElement, MatMode } from "./gpu/element";
+import type { CameraView } from "./core/camera";
+import type { CharacterId, GiId, Grid, TechniqueName } from "./ids";
 
-export * from "./index.ts";
+export * from "./index";
 
 export interface JudoMotionProps extends Omit<
   HTMLAttributes<JudoMotionElement>,

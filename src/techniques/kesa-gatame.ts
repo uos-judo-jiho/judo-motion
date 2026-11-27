@@ -1,6 +1,6 @@
-import type { Pose } from "../core/rig.ts";
-import type { Key, Technique } from "../core/types.ts";
-import { feet, grip } from "./common.ts";
+import type { Pose } from "../core/rig";
+import type { Key, Technique } from "../core/types";
+import { feet, grip } from "./common";
 
 const uke: Pose = {
   p: [45, 4.5, 2],

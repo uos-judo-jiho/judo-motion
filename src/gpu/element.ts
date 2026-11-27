@@ -1,20 +1,20 @@
-import { DEFAULT_CAST, resolveCast } from "../characters/index.ts";
-import { renderMat } from "../core/mat.ts";
-import { isCameraView } from "../core/camera.ts";
-import type { CameraView } from "../core/camera.ts";
-import { TECHNIQUES, findTechnique, fullName } from "../techniques/index.ts";
-import { engine } from "./engine.ts";
-import type { View } from "./engine.ts";
-import { GRIDS } from "../ids.ts";
+import { DEFAULT_CAST, resolveCast } from "../characters/index";
+import { renderMat } from "../core/mat";
+import { isCameraView } from "../core/camera";
+import type { CameraView } from "../core/camera";
+import { TECHNIQUES, findTechnique, fullName } from "../techniques/index";
+import { engine } from "./engine";
+import type { View } from "./engine";
+import { GRIDS } from "../ids";
 import type {
   CharacterId,
   GiId,
   Grid,
   TechniqueId,
   TechniqueName,
-} from "../ids.ts";
-import { describe } from "../techniques/info.ts";
-import type { TechniqueInfo } from "../techniques/info.ts";
+} from "../ids";
+import { describe } from "../techniques/info";
+import type { TechniqueInfo } from "../techniques/info";
 
 /** Lets the module be imported during server rendering, where there is no DOM. */
 const Base = (

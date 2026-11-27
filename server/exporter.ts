@@ -3,14 +3,14 @@ import { spawn } from "node:child_process";
 import { mkdir, stat } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import { join } from "node:path";
-import { castSuffix, resolveCast } from "../src/characters/index.ts";
-import type { Cast, CastIds } from "../src/characters/index.ts";
-import { over, renderMat } from "../src/core/mat.ts";
-import { isCameraView } from "../src/core/camera.ts";
-import type { CameraView } from "../src/core/camera.ts";
-import { rasterize } from "../src/core/raster.ts";
-import { buildScene, createScene } from "../src/core/scene.ts";
-import { findTechnique } from "../src/techniques/index.ts";
+import { castSuffix, resolveCast } from "../src/characters/index";
+import type { Cast, CastIds } from "../src/characters/index";
+import { over, renderMat } from "../src/core/mat";
+import { isCameraView } from "../src/core/camera";
+import type { CameraView } from "../src/core/camera";
+import { rasterize } from "../src/core/raster";
+import { buildScene, createScene } from "../src/core/scene";
+import { findTechnique } from "../src/techniques/index";
 
 export const OUT_DIR: string = fileURLToPath(
   new URL("../exports/", import.meta.url),

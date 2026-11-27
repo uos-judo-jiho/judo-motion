@@ -1,13 +1,13 @@
 /** Importing this registers <judo-motion> in the browser. Safe to import during server rendering. */
-import { CHARACTERS as characters, GIS as gis } from "./characters/index.ts";
-import type { CharacterId, GiId, TechniqueName } from "./ids.ts";
-import { TECHNIQUES as techniques } from "./techniques/index.ts";
-import { describe } from "./techniques/info.ts";
-import type { TechniqueInfo } from "./techniques/info.ts";
+import { CHARACTERS as characters, GIS as gis } from "./characters/index";
+import type { CharacterId, GiId, TechniqueName } from "./ids";
+import { TECHNIQUES as techniques } from "./techniques/index";
+import { describe } from "./techniques/info";
+import type { TechniqueInfo } from "./techniques/info";
 
-export { JudoMotionElement } from "./gpu/element.ts";
-export type { MatMode } from "./gpu/element.ts";
-export { CHARACTER_IDS, GI_IDS, GRIDS, TECHNIQUE_IDS } from "./ids.ts";
+export { JudoMotionElement } from "./gpu/element";
+export type { MatMode } from "./gpu/element";
+export { CHARACTER_IDS, GI_IDS, GRIDS, TECHNIQUE_IDS } from "./ids";
 export type {
   CharacterId,
   GiId,
@@ -15,26 +15,26 @@ export type {
   TechniqueBase,
   TechniqueId,
   TechniqueName,
-} from "./ids.ts";
-export { TECHNIQUE_CATEGORIES } from "./techniques/categories.ts";
+} from "./ids";
+export { TECHNIQUE_CATEGORIES } from "./techniques/categories";
 export type {
   TechniqueCategoryId,
   TechniqueCategoryInfo,
   TechniqueGroupId,
   TechniqueSubgroupId,
-} from "./techniques/categories.ts";
-export { TECHNIQUE_CATALOG } from "./techniques/catalog.ts";
-export type { TechniqueCatalogEntry } from "./techniques/catalog.ts";
-export { TECHNIQUE_STATUS } from "./techniques/definitions.ts";
+} from "./techniques/categories";
+export { TECHNIQUE_CATALOG } from "./techniques/catalog";
+export type { TechniqueCatalogEntry } from "./techniques/catalog";
+export { TECHNIQUE_STATUS } from "./techniques/definitions";
 export type {
   TechniqueCanonicalId,
   TechniqueDevelopmentMeta,
   TechniqueRelease,
   TechniqueStatus,
-} from "./techniques/definitions.ts";
-export type { TechniqueInfo } from "./techniques/info.ts";
-export { CAMERA_VIEWS } from "./core/camera.ts";
-export type { CameraView } from "./core/camera.ts";
+} from "./techniques/definitions";
+export type { TechniqueInfo } from "./techniques/info";
+export { CAMERA_VIEWS } from "./core/camera";
+export type { CameraView } from "./core/camera";
 
 export interface Option<Id extends string> {
   readonly id: Id;

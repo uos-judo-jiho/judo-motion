@@ -3,8 +3,8 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { createElement } from "react";
 import { renderToString } from "react-dom/server";
-import { CHARACTERS, GIS } from "../src/characters/index.ts";
-import { CHARACTER_IDS, GI_IDS, TECHNIQUE_IDS } from "../src/ids.ts";
+import { CHARACTERS, GIS } from "../src/characters/index";
+import { CHARACTER_IDS, GI_IDS, TECHNIQUE_IDS } from "../src/ids";
 import {
   JudoMotion,
   TECHNIQUES as INFO,
@@ -14,8 +14,8 @@ import {
   isCharacter,
   isGi,
   isTechnique,
-} from "../src/react.ts";
-import { TECHNIQUES, variantsOf } from "../src/techniques/index.ts";
+} from "../src/react";
+import { TECHNIQUES, variantsOf } from "../src/techniques/index";
 
 test("every public id has data, in order", () => {
   assert.deepEqual(

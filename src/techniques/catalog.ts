@@ -1,15 +1,11 @@
-import type { TechniqueId } from "../ids.ts";
-import type { TechniqueCategoryId } from "./categories.ts";
-import {
-  CANONICAL_IDS,
-  TECHNIQUE_STATUS,
-  definitionFor,
-} from "./definitions.ts";
+import type { TechniqueId } from "../ids";
+import type { TechniqueCategoryId } from "./categories";
+import { CANONICAL_IDS, TECHNIQUE_STATUS, definitionFor } from "./definitions";
 import type {
   TechniqueCanonicalId,
   TechniqueDevelopmentMeta,
-} from "./definitions.ts";
-import { TECHNIQUES } from "./index.ts";
+} from "./definitions";
+import { TECHNIQUES } from "./index";
 
 export interface TechniqueCatalogEntry {
   readonly id: TechniqueCanonicalId;

@@ -1,12 +1,12 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { parseJob } from "../server/exporter.ts";
-import { CAMERA_VIEWS } from "../src/core/camera.ts";
-import { capsules, closest, overlap, solve } from "../src/core/physics.ts";
-import { ANKLE, SIDES, dot, length, sub, unit } from "../src/core/rig.ts";
-import { buildScene, createScene } from "../src/core/scene.ts";
-import { TECHNIQUES, isTechnique } from "../src/index.ts";
-import { kesaGatame } from "../src/techniques/kesa-gatame.ts";
+import { parseJob } from "../server/exporter";
+import { CAMERA_VIEWS } from "../src/core/camera";
+import { capsules, closest, overlap, solve } from "../src/core/physics";
+import { ANKLE, SIDES, dot, length, sub, unit } from "../src/core/rig";
+import { buildScene, createScene } from "../src/core/scene";
+import { TECHNIQUES, isTechnique } from "../src/index";
+import { kesaGatame } from "../src/techniques/kesa-gatame";
 
 test("kesa-gatame is listed as osaekomi and uses the shared camera presets", () => {
   const { id, poster } = kesaGatame;

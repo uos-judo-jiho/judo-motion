@@ -1,22 +1,17 @@
 import "./style.css";
-import "./gpu/element.ts";
-import {
-  CHARACTERS,
-  DEFAULT_IDS,
-  GIS,
-  resolveCast,
-} from "./characters/index.ts";
-import { portrait } from "./characters/portrait.ts";
-import type { JudoMotionElement } from "./gpu/element.ts";
-import { definitionFor } from "./techniques/definitions.ts";
-import { TECHNIQUE_CATEGORIES } from "./techniques/categories.ts";
-import { engine, stats } from "./gpu/engine.ts";
+import "./gpu/element";
+import { CHARACTERS, DEFAULT_IDS, GIS, resolveCast } from "./characters/index";
+import { portrait } from "./characters/portrait";
+import type { JudoMotionElement } from "./gpu/element";
+import { definitionFor } from "./techniques/definitions";
+import { TECHNIQUE_CATEGORIES } from "./techniques/categories";
+import { engine, stats } from "./gpu/engine";
 import {
   TECHNIQUES,
   baseId,
   findTechnique,
   variantsOf,
-} from "./techniques/index.ts";
+} from "./techniques/index";
 
 const $ = <T extends HTMLElement>(id: string) =>
   document.getElementById(id) as T;

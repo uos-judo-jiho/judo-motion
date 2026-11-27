@@ -2,9 +2,9 @@
  * Tatami floor as its own layer, independent of the fighters: show it, hide it or swap it freely.
  * Perspective is tuned so that, at the fighters' feet, depth matches the rig camera.
  */
-import { GROUND, WORLD } from "./rig.ts";
-import { worldPoint } from "./camera.ts";
-import type { CameraView } from "./camera.ts";
+import { GROUND, WORLD } from "./rig";
+import { worldPoint } from "./camera";
+import type { CameraView } from "./camera";
 
 const HORIZON = 40,
   FLOOR_TOP = 62,

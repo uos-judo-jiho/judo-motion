@@ -1,8 +1,8 @@
 /** CPU reference renderer for file export. Must stay in step with the shader in src/gpu/shader.ts. */
-import { LINE } from "./palette.ts";
-import { WORLD } from "./rig.ts";
-import { DEPTH_SORTED_GROUP, STRIDE } from "./scene.ts";
-import type { Scene } from "./scene.ts";
+import { LINE } from "./palette";
+import { WORLD } from "./rig";
+import { DEPTH_SORTED_GROUP, STRIDE } from "./scene";
+import type { Scene } from "./scene";
 
 export const LIGHT = [-0.5, -0.866] as const;
 const BAYER = [0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5];

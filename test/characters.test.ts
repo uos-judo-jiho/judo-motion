@@ -1,25 +1,25 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { drawHead } from "../src/characters/head.ts";
-import type { Pen } from "../src/characters/head.ts";
-import { CAMERA_VIEWS } from "../src/core/camera.ts";
-import { LINE } from "../src/core/palette.ts";
-import { parseJob } from "../server/exporter.ts";
+import { drawHead } from "../src/characters/head";
+import type { Pen } from "../src/characters/head";
+import { CAMERA_VIEWS } from "../src/core/camera";
+import { LINE } from "../src/core/palette";
+import { parseJob } from "../server/exporter";
 import {
   CHARACTERS,
   GIS,
   castSuffix,
   resolveCast,
-} from "../src/characters/index.ts";
-import { rasterize } from "../src/core/raster.ts";
+} from "../src/characters/index";
+import { rasterize } from "../src/core/raster";
 import {
   MAX_PRIMS,
   STRIDE,
   buildScene,
   createScene,
   solve,
-} from "../src/core/scene.ts";
-import { TECHNIQUES, findTechnique } from "../src/techniques/index.ts";
+} from "../src/core/scene";
+import { TECHNIQUES, findTechnique } from "../src/techniques/index";
 
 for (const c of CHARACTERS)
   test(`${c.id}: works in every technique, in frame, in both roles`, () => {

@@ -1,6 +1,6 @@
 import { defineConfig } from "vite";
 import type { UserConfig } from "vite";
-import { exportApi } from "./server/vite-plugin.ts";
+import { exportApi } from "./server/vite-plugin";
 
 /** The local studio. The published library is built by tsdown. */
 const config: UserConfig = defineConfig({

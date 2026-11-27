@@ -1,6 +1,6 @@
-import type { TechniqueBase, TechniqueId } from "../ids.ts";
-import type { TechniqueCanonicalId } from "../techniques/definitions.ts";
-import type { Pair, Pose } from "./rig.ts";
+import type { TechniqueBase, TechniqueId } from "../ids";
+import type { TechniqueCanonicalId } from "../techniques/definitions";
+import type { Pair, Pose } from "./rig";
 
 /**
  * Where a hand is. Grips resolve against the opponent, so contact survives any motion.

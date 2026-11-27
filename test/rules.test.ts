@@ -1,16 +1,12 @@
 /** Right-handed judo rules every technique must obey. */
 import assert from "node:assert/strict";
 import test from "node:test";
-import { SIDES, dot, length, sub, unit } from "../src/core/rig.ts";
-import type { Limb, V3 } from "../src/core/rig.ts";
-import { capsules, closest, contact } from "../src/core/physics.ts";
-import { solve } from "../src/core/scene.ts";
-import type { Technique } from "../src/core/scene.ts";
-import {
-  findTechnique,
-  TECHNIQUES,
-  variantsOf,
-} from "../src/techniques/index.ts";
+import { SIDES, dot, length, sub, unit } from "../src/core/rig";
+import type { Limb, V3 } from "../src/core/rig";
+import { capsules, closest, contact } from "../src/core/physics";
+import { solve } from "../src/core/scene";
+import type { Technique } from "../src/core/scene";
+import { findTechnique, TECHNIQUES, variantsOf } from "../src/techniques/index";
 
 const dist = (a: V3, b: V3) => length(sub(a, b));
 const bend = (l: Limb) =>

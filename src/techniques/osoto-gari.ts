@@ -1,6 +1,6 @@
-import type { Pose } from "../core/rig.ts";
-import type { Technique } from "../core/scene.ts";
-import { FALLEN, FINISH, KUMI, feet, grip, sideFall } from "./common.ts";
+import type { Pose } from "../core/rig";
+import type { Technique } from "../core/scene";
+import { FALLEN, FINISH, KUMI, feet, grip, sideFall } from "./common";
 
 // Seen from the other side: tori's right leg is nearest to the viewer, so the reap stays visible.
 const tori: Pose = {

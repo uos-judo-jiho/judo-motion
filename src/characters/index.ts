@@ -2,7 +2,7 @@
  * Looks only. A character never touches bones, keyframes or physics, so every character works with
  * every technique. Add one by appending to CHARACTERS.
  */
-import type { CharacterId, GiId } from "../ids.ts";
+import type { CharacterId, GiId } from "../ids";
 
 export type Rgb = number;
 /** [lit, shaded] */

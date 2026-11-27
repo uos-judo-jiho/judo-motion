@@ -1,5 +1,5 @@
-import type { Pair, Pose, V3 } from "../core/rig.ts";
-import type { Grip, Key } from "../core/scene.ts";
+import type { Pair, Pose, V3 } from "../core/rig";
+import type { Grip, Key } from "../core/scene";
 
 type Foot = [number, number, number?];
 export const feet = (r: Foot, l: Foot): Pair<Foot> => ({ r, l });

@@ -1,7 +1,7 @@
 import type { IncomingMessage, ServerResponse } from "node:http";
 import { execFile } from "node:child_process";
 import type { Plugin } from "vite";
-import { OUT_DIR, exportJob, parseJob } from "./exporter.ts";
+import { OUT_DIR, exportJob, parseJob } from "./exporter";
 
 async function body(req: IncomingMessage): Promise<Record<string, unknown>> {
   let s = "";

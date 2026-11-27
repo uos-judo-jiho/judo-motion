@@ -1,6 +1,6 @@
-import type { Pose } from "../core/rig.ts";
-import type { Key, Technique } from "../core/scene.ts";
-import { FALLEN, FINISH, KUMI, SLAP, backFall, feet } from "./common.ts";
+import type { Pose } from "../core/rig";
+import type { Key, Technique } from "../core/scene";
+import { FALLEN, FINISH, KUMI, SLAP, backFall, feet } from "./common";
 
 // Same view as the reference footage: uke's right side faces the viewer, tori's reaping foot shows behind the heel.
 const tori: Pose = {

@@ -139,6 +139,8 @@ git tag v0.1.1 && git push origin v0.1.1
 
 oxlint, oxfmt, TypeScript 7, tsdown을 씁니다. `pnpm check`가 CI와 같은 검사를 합니다.
 
+TypeScript 상대 import에는 확장자를 생략합니다. Vite와 tsdown은 번들러 방식으로 경로를 해석하고, Node에서 실행하는 테스트와 CLI는 `tsx`로 같은 import를 해석합니다.
+
 공개 id는 `src/ids.ts`에 먼저 추가합니다. 데이터가 빠지거나 오타가 있으면 컴파일이나 테스트가 실패합니다.
 
 ## 라이선스

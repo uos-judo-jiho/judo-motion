@@ -1,11 +1,11 @@
-import type { Technique } from "../core/types.ts";
-import type { TechniqueBase, TechniqueId } from "../ids.ts";
-import { TECHNIQUE_STATUS, definitionFor } from "./definitions.ts";
+import type { Technique } from "../core/types";
+import type { TechniqueBase, TechniqueId } from "../ids";
+import { TECHNIQUE_STATUS, definitionFor } from "./definitions";
 import type {
   TechniqueCanonicalId,
   TechniqueDevelopmentMeta,
-} from "./definitions.ts";
-import type { TechniqueCategoryId } from "./categories.ts";
+} from "./definitions";
+import type { TechniqueCategoryId } from "./categories";
 
 /** What a page needs to know about a technique; keyframes stay internal. */
 export interface TechniqueInfo {
