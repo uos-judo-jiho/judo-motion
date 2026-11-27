@@ -34,7 +34,7 @@ pnpm run export -t kesa-gatame --view three-quarter --mat # 곁누르기 사선 
 - `src/gpu` WebGL2 엔진과 `<judo-motion>` 웹 컴포넌트
 - `server` ffmpeg 내보내기 API와 CLI. 결과는 `exports/`
 
-CPU 렌더러(`core/raster.ts`)와 셰이더(`gpu/shader.ts`)는 같은 알고리즘이므로 함께 수정해야 합니다.
+CPU 렌더러(`core/raster.ts`)와 셰이더(`src/gpu/shaders/`)는 같은 알고리즘이므로 함께 수정해야 합니다. GLSL 파일은 빌드할 때 JS에 포함됩니다. VS Code에서는 작업 영역의 GLSL 구문 강조 확장을 사용할 수 있습니다.
 
 ## 동작 규칙
 

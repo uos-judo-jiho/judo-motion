@@ -34,7 +34,7 @@
     "lint:fix": "oxlint --type-aware --fix",
     "format": "oxfmt .",
     "format:check": "oxfmt --check .",
-    "test": "node --import tsx --test test/*.test.ts",
+    "test": "node --import tsx --import ./scripts/register-glsl.mjs --test test/*.test.ts",
     "check": "pnpm format:check && pnpm lint && pnpm type-check && pnpm test",
     "export": "node --import tsx server/cli.ts",
     "prepack": "pnpm build:lib",
