@@ -1,11 +1,11 @@
 /** Bodies are solid, knees are hinges, motion is continuous. Checked between baked frames too. */
 import assert from "node:assert/strict";
 import test from "node:test";
-import { capsules, collides, overlap } from "../src/core/physics";
+import { capsules, closest, collides, overlap } from "../src/core/physics";
 import { SIDES, carry, dot, length, sub, unit } from "../src/core/rig";
 import type { V3 } from "../src/core/rig";
 import { solve } from "../src/core/scene";
-import { TECHNIQUES } from "../src/techniques/index";
+import { TECHNIQUES, findTechnique } from "../src/techniques/index";
 
 const each = (duration: number, f: (t: number) => void) => {
   for (let t = 0; t < duration; t += 1 / 144) f(t);
@@ -144,3 +144,18 @@ for (const tech of TECHNIQUES) {
     }
   });
 }
+
+test("seoi-nage keeps the shoulder lines apart during the turnover", () => {
+  const tech = findTechnique("seoi-nage")!;
+  for (let t = 1.22; t <= 1.5; t += 1 / 144) {
+    const { tori, uke } = solve(tech, t);
+    const { dist } = closest(
+      { a: tori.shoulders.l, b: tori.shoulders.r },
+      { a: uke.shoulders.l, b: uke.shoulders.r },
+    );
+    assert.ok(
+      dist > 3.4,
+      `shoulder clearance ${dist.toFixed(2)} at ${t.toFixed(3)}s`,
+    );
+  }
+});

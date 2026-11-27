@@ -108,6 +108,8 @@ export const seoiNage: Technique = {
         feet: SET,
       },
       uke: {
+        // Keep the free elbow clear of tori’s head as uke turns over.
+        elbowBias: { l: [0, 0, 1.4] },
         p: [59, 24, 9],
         yaw: 28,
         rot: 228,
@@ -121,7 +123,10 @@ export const seoiNage: Technique = {
       t: 1.6,
       hit: true,
       tori: { p: [37.5, 19.4, 0], yaw: YAW, lean: 74, feet: SET },
-      uke: sideFall([62, 4.2, 9], 8, 270, 0),
+      uke: {
+        ...sideFall([62, 4.2, 9], 8, 270, 0),
+        elbowBias: { l: [0, 0, 1.4] },
+      },
       toriGrip: KUMI,
       ukeGrip: FALLEN,
     },
