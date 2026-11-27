@@ -1,7 +1,6 @@
 {
-  "name": "judo-motion",
-  "version": "0.1.0",
-  "private": true,
+  "name": "@uos-judo-jiho/judo-motion",
+  "version": "0.1.1",
   "description": "GPU pixel-art judo technique animations as a web component",
   "homepage": "https://github.com/uos-judo-jiho/judo-motion",
   "license": "MIT",
@@ -22,6 +21,10 @@
       "default": "./dist/standalone.js"
     },
     "./package.json": "./package.json"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
   },
   "scripts": {
     "dev": "vite --configLoader runner",
