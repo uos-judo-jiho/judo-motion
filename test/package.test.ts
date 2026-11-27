@@ -156,6 +156,6 @@ test("the full catalog preserves the Kodokan counts and playable IDs", () => {
     "ko-uchi-gari-v2",
   ]);
   assert.equal(entries.get("seoi-nage")?.__meta.since, "v0.1.0");
-  assert.equal(entries.get("kesa-gatame")?.__meta.since, undefined);
+  assert.equal(entries.get("kesa-gatame")?.__meta.since, "v0.1.1");
   assert.equal(entries.get("obi-otoshi")?.provisionalKo, true);
 });

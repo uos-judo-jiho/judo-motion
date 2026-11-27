@@ -100,7 +100,7 @@ import { JudoMotion } from "judo-motion/react";
 `category`는 말단 분류 ID이며, `TECHNIQUE_CATEGORIES`에서 대분류, 중분류, 한글 명칭을 조회할 수 있습니다. 기존 `group`은 표시 문자열이며 `kind`는 애니메이션 유형입니다.
 
 ```ts
-import { TECHNIQUES, TECHNIQUE_CATEGORIES } from "judo-motion";
+import { TECHNIQUES, TECHNIQUE_CATEGORIES } from "@uos-judo-jiho/judo-motion";
 
 const footTechniques = TECHNIQUES.filter((t) => t.category === "ashi-waza");
 const grappling = TECHNIQUES.filter(
@@ -115,7 +115,10 @@ CLI의 `--category`는 말단 분류 ID뿐 아니라 `nage-waza` 같은 대분�
 `TECHNIQUE_CATALOG`는 고도칸 100개 기술의 표준 ID, 이름, 분류와 연결된 애니메이션 ID를 제공합니다. 카탈로그의 `id`는 표준 ID이며 공개 재생 ID와 다를 수 있습니다. 예를 들어 `o-soto-gari`에는 기존 재생 ID `osoto-gari`가 연결됩니다. 한국어 임시 번역에는 `provisionalKo: true`가 표시됩니다. [분류 및 한국어 이름 출처](https://github.com/uos-judo-jiho/judo-motion/issues/7#issuecomment-7211866548)
 
 ```ts
-import { TECHNIQUE_CATALOG, TECHNIQUE_STATUS } from "judo-motion";
+import {
+  TECHNIQUE_CATALOG,
+  TECHNIQUE_STATUS,
+} from "@uos-judo-jiho/judo-motion";
 
 const backlog = TECHNIQUE_CATALOG.filter(
   (technique) => technique.__meta.status === TECHNIQUE_STATUS.UNIMPLEMENTED,

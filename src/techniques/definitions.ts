@@ -181,7 +181,7 @@ const definitions = {
   "ko-uchi-gari": {
     category: "ashi-waza",
     romaji: "Ko-uchi-gari",
-    ko: "안뒷축후리기",
+    ko: "안뒤축걸기",
     since: "v0.1.0",
   },
   "okuri-ashi-harai": {
@@ -379,6 +379,7 @@ const definitions = {
     category: "osaekomi-waza",
     romaji: "Kesa-gatame",
     ko: "곁누르기",
+    since: "v0.1.1",
   },
   "kuzure-kesa-gatame": {
     category: "osaekomi-waza",
