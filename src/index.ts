@@ -1,7 +1,7 @@
 /** Importing this registers <judo-motion> in the browser. Safe to import during server rendering. */
 import { CHARACTERS as characters, GIS as gis } from "./characters/index";
 import type { CharacterId, GiId, TechniqueName } from "./ids";
-import { TECHNIQUES as techniques } from "./techniques/index";
+import { TECHNIQUES as techniques, findTechnique } from "./techniques/index";
 import { describe } from "./techniques/info";
 import type { TechniqueInfo } from "./techniques/info";
 
@@ -51,9 +51,15 @@ export const GIS: readonly Option<GiId>[] = gis.map(({ id, ko }) => ({
   ko,
 }));
 
+/** Look up a playable ID or resolve a base name to its default variant. */
+export function getTechniqueInfo(id: string): TechniqueInfo | undefined {
+  const technique = findTechnique(id);
+  return technique && describe(technique);
+}
+
 /** Narrow an arbitrary string, e.g. a URL parameter. */
 export const isTechnique = (id: string): id is TechniqueName =>
-  techniques.some((t) => t.id === id || t.variant?.of === id);
+  findTechnique(id) !== undefined;
 export const isCharacter = (id: string): id is CharacterId =>
   characters.some((c) => c.id === id);
 export const isGi = (id: string): id is GiId => gis.some((g) => g.id === id);

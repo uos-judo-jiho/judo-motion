@@ -11,6 +11,7 @@ import {
   TECHNIQUE_CATEGORIES,
   TECHNIQUE_CATALOG,
   TECHNIQUE_STATUS,
+  getTechniqueInfo,
   isCharacter,
   isGi,
   isTechnique,
@@ -38,6 +39,21 @@ test("guards accept ids and base names only", () => {
   assert.ok(isTechnique("seoi-nage") && isTechnique("ko-uchi-gari"));
   assert.ok(!isTechnique("nope") && !isCharacter("nope") && !isGi("nope"));
   assert.ok(isCharacter("bear") && isGi("black"));
+});
+
+test("public lookup resolves playable IDs and aliases like the renderer", () => {
+  for (const expected of INFO) {
+    assert.deepEqual(getTechniqueInfo(expected.id), expected);
+  }
+  assert.equal(getTechniqueInfo("ko-uchi-gari")?.id, "ko-uchi-gari-v1");
+  assert.equal(
+    getTechniqueInfo("ko-uchi-gari-v2")?.variant?.label,
+    "들어가서 걸기",
+  );
+  assert.equal(getTechniqueInfo("osoto-gari")?.canonicalId, "o-soto-gari");
+  assert.equal(getTechniqueInfo("o-soto-gari"), undefined);
+  assert.equal(getTechniqueInfo("ippon-seoi-nage"), undefined);
+  assert.equal(getTechniqueInfo("unknown"), undefined);
 });
 
 test("renders on the server with dashed attributes and a reserved box", () => {
