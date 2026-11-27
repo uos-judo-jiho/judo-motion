@@ -68,7 +68,7 @@ function select(id: string) {
   if (variants.length > 1)
     choices(
       "variant",
-      variants.map((v) => [v.id, `${v.variant!.name} ${v.variant!.label}`]),
+      variants.map((v) => [v.id, v.variant!.label]),
       t.id,
       select,
     );

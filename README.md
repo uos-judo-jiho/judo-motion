@@ -18,7 +18,7 @@ pnpm dev        # http://localhost:5180
 pnpm test
 pnpm run export --format gif --size 128                # 전체 기술
 pnpm run export -t seoi-nage --format webp --size 512  # 하나만
-pnpm run export -t ko-uchi-gari                        # 모든 방식(v1, v2)
+pnpm run export -t ko-uchi-gari                        # 모든 방식
 pnpm run export --category ashi-waza                  # 발기술만
 pnpm run export --mat                                  # 다다미 포함
 pnpm run export -t seoi-nage --view side               # 측면에서 내보내기
@@ -46,7 +46,7 @@ CPU 렌더러(`core/raster.ts`)와 셰이더(`gpu/shader.ts`)는 같은 알고�
 - 받는 사람은 측방낙법: 왼다리는 펴고 오른무릎은 90도. 뒤로 넘어가는 기술은 후방낙법(`ukemi: 'back'`): 등을 평평하게, 턱을 당기고 두 손으로 바닥을 친다.
 - 업어치기: 두 발은 11자, 사선으로 놓는다.
 - 밭다리후리기: 오른다리로 상대 오른다리를 건다.
-- 안뒤축걸기: 오른 발바닥으로 상대 오른발 뒤꿈치를 안쪽에서 쓴다. v1은 끌어서(`draws: true`), v2는 들어가서. v1·v2는 우열이 아니라 방식의 차이다.
+- 안뒤축걸기: 오른 발바닥으로 상대 오른발 뒤꿈치를 안쪽에서 쓴다. 끌어서 걸기(`draws: true`)와 들어가서 걸기 두 방식이 있다. 개별 내보내기에는 각각 기존 재생 ID `ko-uchi-gari-v1`과 `ko-uchi-gari-v2`를 사용한다.
 - 배대뒤치기: 오른발이 상대 두 발 사이로 깊이 들어가고, 따라오는 왼발을 배에 대어 누우며 머리 너머로 넘긴다. 마무리는 왼손만 소매를 잡는다(`keepsLapel`).
 - 허벅다리걸기: 오른발이 깊이 들어가고, 오른 팔꿈치는 하늘을 향한다.
 
