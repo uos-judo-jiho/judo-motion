@@ -50,6 +50,8 @@ export interface Pose {
   legs?: Pair<[number, number, number?]>;
   /** 0 = right elbow hangs naturally, 1 = right elbow points to the sky. */
   elbowUp?: number;
+  /** Optional elbow pole bias in chest axes [forward, up, right]. */
+  elbowBias?: Partial<Pair<V3>>;
 }
 
 export const add = (a: V3, b: V3, k = 1): V3 => [
@@ -129,6 +131,7 @@ export interface Body {
   /** Horizontal direction the toes point when planted. */
   toes: V3;
   elbowUp: number;
+  elbowBias?: Partial<Pair<V3>>;
   /** Point on the trunk: along the spine, out toward the chest, sideways toward own right. */
   at: (along: number, out: number, side?: number) => V3;
 }
@@ -327,6 +330,7 @@ export function buildBody(
     hips,
     toes: root.F0,
     elbowUp: pose.elbowUp ?? 0,
+    elbowBias: pose.elbowBias,
     shoulders: {
       r: at(BONES.SHOULDER, 0, BONES.SHOULDER_W),
       l: at(BONES.SHOULDER, 0, -BONES.SHOULDER_W),
@@ -367,10 +371,17 @@ export function solveArm(
           ]
         : push;
   const bend = side === "r" ? mix(natural, [0, 1, 0], body.elbowUp) : natural;
-  const pole = add(
+  let pole = add(
     elbowGuide ? mix(bend, elbowGuide.direction, elbowGuide.weight) : bend,
     eased,
   );
+  const bias = body.elbowBias?.[side];
+  if (bias)
+    pole = add(
+      add(add(pole, body.F, bias[0]), body.U, bias[1]),
+      body.R,
+      bias[2],
+    );
   const [b, c] = ik(a, target, BONES.UPPER_ARM, BONES.FOREARM, pole);
   return { a, b, c };
 }

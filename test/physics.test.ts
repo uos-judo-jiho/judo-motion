@@ -102,6 +102,24 @@ for (const tech of TECHNIQUES) {
         }
     }));
 
+  test(`${tech.id}: elbows stay continuous between baked frames`, () => {
+    let previous = solve(tech, 0);
+    each(tech.duration, (t) => {
+      const current = solve(tech, t);
+      for (const who of ["toriArms", "ukeArms"] as const)
+        for (const side of SIDES) {
+          const travel = length(
+            sub(current[who][side].b, previous[who][side].b),
+          );
+          assert.ok(
+            travel < 3,
+            `${who} ${side} elbow moves ${travel.toFixed(2)} at ${t.toFixed(3)}s`,
+          );
+        }
+      previous = current;
+    });
+  });
+
   test(`${tech.id}: nothing teleports`, () => {
     let prev = solve(tech, 0);
     for (let t = 1 / 60; t < tech.duration; t += 1 / 60) {
