@@ -17,14 +17,14 @@ export function drawHead(
   line: Rgb,
   view: CameraView,
 ): void {
-  const { look, up, R } = body,
+  const { look, up, headRight } = body,
     [skin, skinD] = c.skin,
     [hair, hairD] = c.hair,
     accent = c.accent ?? skin;
   const h = (fw: number, u: number, sd = 0): V3 =>
-    add(add(add(body.head, look, fw), up, u), R, sd);
+    add(add(add(body.head, look, fw), up, u), headRight, sd);
   const facing = cameraDirection(look, view)[2],
-    right = cameraDirection(R, view)[2],
+    right = cameraDirection(headRight, view)[2],
     toward = facing > 0.45,
     away = facing < -0.45;
   /** Sides of the face that can be seen. */

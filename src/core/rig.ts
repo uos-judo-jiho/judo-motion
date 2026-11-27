@@ -119,9 +119,10 @@ export interface Body {
   R: V3;
   /** Pelvis axes: the hips take half of the spine's lean. */
   hip: Axes;
-  /** Head axes. */
+  /** Head-local axes, including collision corrections to the neck. */
   look: V3;
   up: V3;
+  headRight: V3;
   shoulders: Pair<V3>;
   hips: Pair<V3>;
   legs: Pair<Limb>;
@@ -291,7 +292,8 @@ export function buildBody(
   const up0 = turn(U, F, h),
     look0 = turn(F, U, -h);
   const up = unit(add([up0[0] * 7.2, up0[1] * 7.2, up0[2] * 7.2], o.head)),
-    look = unit(carry(look0, up0, up));
+    look = unit(carry(look0, up0, up)),
+    headRight = unit(carry(R, up0, up));
   const hips = {
     r: add(pelvis, hip.R, BONES.HIP_W),
     l: add(pelvis, hip.R, -BONES.HIP_W),
@@ -320,6 +322,7 @@ export function buildBody(
     hip,
     look,
     up,
+    headRight,
     at,
     hips,
     toes: root.F0,
