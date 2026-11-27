@@ -7,6 +7,16 @@
 
 ---
 
+### 개발판 (canary)
+
+`main`에서 라이브러리 소스, 패키지·라이브러리 빌드 설정 또는 패키지에 포함되는 README·라이선스가 바뀌면 릴리스 워크플로가 검사 후 개발판을 npm의 `canary` 채널에 게시합니다. 데모 UI, 내보내기 서버, 테스트만 바뀌는 경우에는 개발판 게시를 생략합니다. 예를 들어 안정판 버전이 `0.1.1`이면 `0.1.2-canary.261128001530.ga1b2c3d4` 형식을 사용합니다. 타임스탬프는 커밋 시각(UTC)이며 마지막 값은 짧은 커밋 SHA입니다. 게시가 끝나면 같은 커밋에 `v` 접두어가 붙은 Git 태그를 생성합니다.
+
+```sh
+pnpm add @uos-judo-jiho/judo-motion@canary
+```
+
+일반 설치는 계속 안정판 `latest`를 받습니다. 첫 안정판 등록과 Trusted Publisher 설정을 마친 뒤 `main`에 푸시하면 개발판이 게시됩니다. 첫 게시에서 `PUT` 요청이 `E404`를 반환하면 `npm whoami --registry https://registry.npmjs.org`로 로그인 계정을 확인하고, npm 조직에서 그 계정의 멤버십과 패키지 생성 권한을 확인하세요. [npm 조직 패키지 게시](https://docs.npmjs.com/creating-and-publishing-an-organization-scoped-package/)
+
 ## 개발 시작하기
 
 필요: [mise](https://mise.jdx.dev), ffmpeg. Node와 pnpm 버전은 `mise.toml`이 맞춰 줍니다.

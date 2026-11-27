@@ -1,12 +1,27 @@
 name: Release
 
-# 버전 태그를 올리면 검사 후 GitHub Release와 npm에 같은 패키지를 배포한다.
+# 안정판 태그는 GitHub Release와 npm으로, main 푸시는 npm canary로 배포한다.
 on:
   push:
-    tags: ["v*"]
+    branches: ["main"]
+    tags: ["v*", "!v*-canary.*"]
+    # GitHub applies these paths only to branch pushes, not release tags.
+    paths:
+      - "src/**"
+      - "!src/main.ts"
+      - "!src/style.css"
+      - "!src/characters/portrait.ts"
+      - "package.json"
+      - "pnpm-lock.yaml"
+      - "pnpm-workspace.yaml"
+      - "tsconfig.json"
+      - "tsdown.config.ts"
+      - "README.md"
+      - "LICENSE"
 
 jobs:
   release:
+    if: startsWith(github.ref, 'refs/tags/v')
     permissions:
       contents: write
     runs-on: ubuntu-latest
@@ -68,3 +83,67 @@ jobs:
               exit 1
               ;;
           esac
+
+  canary:
+    if: github.ref == 'refs/heads/main'
+    concurrency:
+      group: npm-canary
+      queue: max
+    permissions:
+      contents: write
+      id-token: write
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "24"
+          registry-url: https://registry.npmjs.org
+          package-manager-cache: false
+      - name: Publish and tag canary
+        shell: bash
+        run: |
+          registry="https://registry.npmjs.org/@uos-judo-jiho%2fjudo-motion"
+          status=$(curl --silent --show-error --output /dev/null --write-out '%{http_code}' "$registry")
+          case "$status" in
+            200) ;;
+            404)
+              echo "::notice::안정판을 처음 게시하고 Trusted Publisher를 설정하면 canary 배포가 시작됩니다."
+              exit 0
+              ;;
+            *)
+              echo "::error::npm 레지스트리 조회 실패 (HTTP $status)"
+              exit 1
+              ;;
+          esac
+
+          commit_time=$(git show -s --format=%ct "$GITHUB_SHA")
+          version=$(node - "$commit_time" "$GITHUB_SHA" <<'JS'
+          const [time, sha] = process.argv.slice(2);
+          const base = require("./package.json").version;
+          const match = /^(\d+)\.(\d+)\.(\d+)$/.exec(base);
+          if (!match) throw new Error(`Expected a stable package version, got ${base}`);
+          const [, major, minor, patch] = match;
+          const stamp = new Date(Number(time) * 1000)
+            .toISOString().slice(2, 19).replace(/\D/g, "");
+          process.stdout.write(`${major}.${minor}.${Number(patch) + 1}-canary.${stamp}.g${sha.slice(0, 8)}`);
+          JS
+          )
+
+          status=$(curl --silent --show-error --output /dev/null --write-out '%{http_code}' "$registry/$version")
+          case "$status" in
+            200) echo "Canary $version already exists on npm" ;;
+            404)
+              pnpm install --frozen-lockfile
+              pnpm check
+              npm version "$version" --no-git-tag-version --ignore-scripts
+              pnpm pack --out "./judo-motion-%v.tgz"
+              npm publish "./judo-motion-$version.tgz" --tag canary
+              ;;
+            *)
+              echo "::error::canary 버전 조회 실패 (HTTP $status)"
+              exit 1
+              ;;
+          esac
+          git push origin "$GITHUB_SHA:refs/tags/v$version"
