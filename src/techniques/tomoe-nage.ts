@@ -26,7 +26,7 @@ export const tomoeNage: Technique = {
   ko: "배대뒤치기",
   ja: "巴投",
   romaji: "Tomoe-nage",
-  category: "ma-sutemi-waza",
+  canonicalId: "tomoe-nage",
   group: "누우며메치기",
   note: "오른발이 깊이 들어가고, 따라오는 왼발을 그대로 상대 배에 대어 뒤로 누우며 머리 너머로 넘긴다.",
   ukemi: "side",

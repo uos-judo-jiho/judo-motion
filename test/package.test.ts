@@ -9,6 +9,8 @@ import {
   JudoMotion,
   TECHNIQUES as INFO,
   TECHNIQUE_CATEGORIES,
+  TECHNIQUE_CATALOG,
+  TECHNIQUE_STATUS,
   isCharacter,
   isGi,
   isTechnique,
@@ -80,7 +82,7 @@ test("playable techniques expose their category without changing group or kind",
     ],
   );
   assert.equal(
-    new Set(variantsOf("ko-uchi-gari").map((t) => t.category)).size,
+    new Set(variantsOf("ko-uchi-gari").map((t) => t.canonicalId)).size,
     1,
   );
   assert.ok(!isTechnique("ippon-seoi-nage"));
@@ -104,4 +106,56 @@ test("every category exposes its Kodokan classification path", () => {
     "nage-waza/tachi-waza/koshi-waza",
     "nage-waza/tachi-waza/te-waza",
   ]);
+});
+
+test("the full catalog preserves the Kodokan counts and playable IDs", () => {
+  assert.equal(TECHNIQUE_CATALOG.length, 100);
+  assert.equal(new Set(TECHNIQUE_CATALOG.map((entry) => entry.id)).size, 100);
+  assert.deepEqual(
+    Object.fromEntries(
+      Object.keys(TECHNIQUE_CATEGORIES).map((id) => [
+        id,
+        TECHNIQUE_CATALOG.filter((entry) => entry.category === id).length,
+      ]),
+    ),
+    {
+      "te-waza": 16,
+      "koshi-waza": 10,
+      "ashi-waza": 21,
+      "ma-sutemi-waza": 5,
+      "yoko-sutemi-waza": 16,
+      "osaekomi-waza": 10,
+      "shime-waza": 12,
+      "kansetsu-waza": 10,
+    },
+  );
+  assert.deepEqual(
+    TECHNIQUE_CATALOG.flatMap((entry) => entry.animationIds).sort(),
+    [...TECHNIQUE_IDS].sort(),
+  );
+
+  for (const entry of TECHNIQUE_CATALOG) {
+    if (entry.animationIds.length === 0) {
+      assert.equal(entry.__meta.status, TECHNIQUE_STATUS.UNIMPLEMENTED);
+      assert.equal(entry.__meta.since, undefined);
+      assert.ok(!isTechnique(entry.id));
+    } else {
+      assert.equal(entry.__meta.status, TECHNIQUE_STATUS.AVAILABLE);
+      for (const id of entry.animationIds) {
+        const technique = INFO.find((info) => info.id === id);
+        assert.equal(technique?.canonicalId, entry.id);
+        assert.equal(technique?.category, entry.category);
+        assert.deepEqual(technique?.__meta, entry.__meta);
+      }
+    }
+  }
+  const entries = new Map(TECHNIQUE_CATALOG.map((entry) => [entry.id, entry]));
+  assert.deepEqual(entries.get("o-soto-gari")?.animationIds, ["osoto-gari"]);
+  assert.deepEqual(entries.get("ko-uchi-gari")?.animationIds, [
+    "ko-uchi-gari-v1",
+    "ko-uchi-gari-v2",
+  ]);
+  assert.equal(entries.get("seoi-nage")?.__meta.since, "v0.1.0");
+  assert.equal(entries.get("kesa-gatame")?.__meta.since, undefined);
+  assert.equal(entries.get("obi-otoshi")?.provisionalKo, true);
 });

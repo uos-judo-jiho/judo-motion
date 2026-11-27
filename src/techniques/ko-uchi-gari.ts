@@ -25,10 +25,10 @@ const drawn: Pose = {
 };
 
 const shared = {
-  ko: "안뒷축걸기",
+  ko: "안뒤축걸기",
   ja: "小内刈",
   romaji: "Ko-uchi-gari",
-  category: "ashi-waza" as const,
+  canonicalId: "ko-uchi-gari" as const,
   group: "발기술",
   ukemi: "back" as const,
   duration: 3.2,

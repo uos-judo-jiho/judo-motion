@@ -1,5 +1,5 @@
 import type { TechniqueBase, TechniqueId } from "../ids.ts";
-import type { TechniqueCategoryId } from "../techniques/categories.ts";
+import type { TechniqueCanonicalId } from "../techniques/definitions.ts";
 import type { Pair, Pose } from "./rig.ts";
 
 /**
@@ -42,7 +42,7 @@ interface TechniqueData {
   ja: string;
   romaji: string;
   group: string;
-  category: TechniqueCategoryId;
+  canonicalId: TechniqueCanonicalId;
   note: string;
   /** One of several equally valid ways to do technique `of`. Numbers are labels, not progress. */
   variant?: { of: TechniqueBase; name: string; label: string };

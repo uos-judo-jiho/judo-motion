@@ -46,7 +46,7 @@ CPU 렌더러(`core/raster.ts`)와 셰이더(`gpu/shader.ts`)는 같은 알고�
 - 받는 사람은 측방낙법: 왼다리는 펴고 오른무릎은 90도. 뒤로 넘어가는 기술은 후방낙법(`ukemi: 'back'`): 등을 평평하게, 턱을 당기고 두 손으로 바닥을 친다.
 - 업어치기: 두 발은 11자, 사선으로 놓는다.
 - 밭다리후리기: 오른다리로 상대 오른다리를 건다.
-- 안뒷축걸기: 오른 발바닥으로 상대 오른발 뒤꿈치를 안쪽에서 쓴다. v1은 끌어서(`draws: true`), v2는 들어가서. v1·v2는 우열이 아니라 방식의 차이다.
+- 안뒤축걸기: 오른 발바닥으로 상대 오른발 뒤꿈치를 안쪽에서 쓴다. v1은 끌어서(`draws: true`), v2는 들어가서. v1·v2는 우열이 아니라 방식의 차이다.
 - 배대뒤치기: 오른발이 상대 두 발 사이로 깊이 들어가고, 따라오는 왼발을 배에 대어 누우며 머리 너머로 넘긴다. 마무리는 왼손만 소매를 잡는다(`keepsLapel`).
 - 허벅다리걸기: 오른발이 깊이 들어가고, 오른 팔꿈치는 하늘을 향한다.
 
@@ -109,6 +109,20 @@ const grappling = TECHNIQUES.filter(
 ```
 
 CLI의 `--category`는 말단 분류 ID뿐 아니라 `nage-waza` 같은 대분류와 `tachi-waza` 같은 중분류도 받습니다. `--technique`와 함께 지정하면 두 조건을 모두 충족하는 기술을 내보냅니다.
+
+### 전체 기술 카탈로그
+
+`TECHNIQUE_CATALOG`는 고도칸 100개 기술의 표준 ID, 이름, 분류와 연결된 애니메이션 ID를 제공합니다. 카탈로그의 `id`는 표준 ID이며 공개 재생 ID와 다를 수 있습니다. 예를 들어 `o-soto-gari`에는 기존 재생 ID `osoto-gari`가 연결됩니다. 한국어 임시 번역에는 `provisionalKo: true`가 표시됩니다. [분류 및 한국어 이름 출처](https://github.com/uos-judo-jiho/judo-motion/issues/7#issuecomment-7211866548)
+
+```ts
+import { TECHNIQUE_CATALOG, TECHNIQUE_STATUS } from "judo-motion";
+
+const backlog = TECHNIQUE_CATALOG.filter(
+  (technique) => technique.__meta.status === TECHNIQUE_STATUS.UNIMPLEMENTED,
+);
+```
+
+`__meta.status`가 `available`이면 현재 소스에서 재생할 수 있습니다. `__meta.since`는 해당 기술의 애니메이션이 처음 포함된 태그를 확인할 수 있을 때만 표시합니다. `TECHNIQUES`의 각 애니메이션에서도 `canonicalId`와 동일 기술의 `__meta`를 조회할 수 있습니다.
 
 ### 릴리스
 

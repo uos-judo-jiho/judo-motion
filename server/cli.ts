@@ -1,5 +1,6 @@
 /** npm run export -- --format gif --size 256 [--technique seoi-nage] [--view side] [--fps 25] [--mat] [--tori bear --uke cat --toriGi black --ukeGi red] */
 import { parseArgs } from "node:util";
+import { definitionFor } from "../src/techniques/definitions.ts";
 import { TECHNIQUE_CATEGORIES } from "../src/techniques/categories.ts";
 import {
   TECHNIQUES,
@@ -43,7 +44,8 @@ try {
     ids = ids.filter((id) => {
       const technique = findTechnique(id);
       if (!technique) throw new Error(`알 수 없는 기술: ${id}`);
-      return matches.some((category) => category.id === technique.category);
+      const { category } = definitionFor(technique.canonicalId);
+      return matches.some(({ id }) => id === category);
     });
     if (!ids.length)
       throw new Error(`내보낼 기술이 없는 분류: ${values.category}`);

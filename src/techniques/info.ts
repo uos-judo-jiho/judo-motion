@@ -1,6 +1,10 @@
 import type { Technique } from "../core/types.ts";
 import type { TechniqueBase, TechniqueId } from "../ids.ts";
-
+import { TECHNIQUE_STATUS, definitionFor } from "./definitions.ts";
+import type {
+  TechniqueCanonicalId,
+  TechniqueDevelopmentMeta,
+} from "./definitions.ts";
 import type { TechniqueCategoryId } from "./categories.ts";
 
 /** What a page needs to know about a technique; keyframes stay internal. */
@@ -10,6 +14,8 @@ export interface TechniqueInfo {
   readonly ja: string;
   readonly romaji: string;
   readonly group: string;
+  readonly canonicalId: TechniqueCanonicalId;
+  readonly __meta: TechniqueDevelopmentMeta;
   readonly category: TechniqueCategoryId;
   readonly kind: NonNullable<Technique["kind"]>;
   readonly note: string;
@@ -30,19 +36,22 @@ export function describe(t: Technique): TechniqueInfo {
     ja,
     romaji,
     group,
-    category,
+    canonicalId,
     note,
     duration,
     phases,
     variant,
   } = t;
+  const { category, since } = definitionFor(canonicalId);
   return {
     id,
     ko,
     ja,
     romaji,
     group,
+    canonicalId,
     category,
+    __meta: { status: TECHNIQUE_STATUS.AVAILABLE, ...(since && { since }) },
     kind: t.kind ?? "throw",
     note,
     duration,
