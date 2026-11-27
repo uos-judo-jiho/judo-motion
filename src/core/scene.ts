@@ -107,11 +107,12 @@ export function buildScene(
     put(p, p, r, r, col, shade);
 
   // Impact, drawn behind the fighters: dust skims the mat while short sparks burst outward.
-  const k = (t - tech.impact.t) / 0.32;
-  if (k >= 0 && k < 1) {
+  const impact = tech.impact;
+  const k = impact ? (t - impact.t) / 0.32 : -1;
+  if (impact && k >= 0 && k < 1) {
     tag = 0;
     const e = 1 - (1 - k) ** 2,
-      [gx, gy] = project(point([tech.impact.x, 0, tech.impact.z ?? 0]));
+      [gx, gy] = project(point([impact.x, 0, impact.z ?? 0]));
     for (const side of [-1, 1]) {
       for (let j = 0; j < 3; j++) {
         const p: V2 = [

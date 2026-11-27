@@ -337,6 +337,7 @@ export function solveArm(
   side: Side,
   target: V3,
   push: V3 = [0, 0, 0],
+  elbowGuide?: { direction: V3; weight: number },
 ): Limb {
   const a = body.shoulders[side],
     dir = unit(sub(target, a));
@@ -362,8 +363,9 @@ export function solveArm(
             (push[2] * 1.6) / size,
           ]
         : push;
+  const bend = side === "r" ? mix(natural, [0, 1, 0], body.elbowUp) : natural;
   const pole = add(
-    side === "r" ? mix(natural, [0, 1, 0], body.elbowUp) : natural,
+    elbowGuide ? mix(bend, elbowGuide.direction, elbowGuide.weight) : bend,
     eased,
   );
   const [b, c] = ik(a, target, BONES.UPPER_ARM, BONES.FOREARM, pole);

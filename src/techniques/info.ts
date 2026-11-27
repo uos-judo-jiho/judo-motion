@@ -8,6 +8,7 @@ export interface TechniqueInfo {
   readonly ja: string;
   readonly romaji: string;
   readonly group: string;
+  readonly kind: NonNullable<Technique["kind"]>;
   readonly note: string;
   /** Seconds. */
   readonly duration: number;
@@ -27,6 +28,7 @@ export function describe(t: Technique): TechniqueInfo {
     ja,
     romaji,
     group,
+    kind: t.kind ?? "throw",
     note,
     duration,
     phases,

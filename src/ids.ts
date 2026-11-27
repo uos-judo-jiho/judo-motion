@@ -6,6 +6,7 @@ export const TECHNIQUE_IDS = [
   "ko-uchi-gari-v1",
   "ko-uchi-gari-v2",
   "tomoe-nage",
+  "kesa-gatame",
 ] as const;
 export type TechniqueId = (typeof TECHNIQUE_IDS)[number];
 /** Base names that stand for their first variant. */

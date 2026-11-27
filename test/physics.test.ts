@@ -69,15 +69,17 @@ for (const tech of TECHNIQUES) {
         }
     }));
 
-  test(`${tech.id}: uke is on the mat at impact and stays there`, () =>
-    each(tech.duration, (t) => {
-      if (t < tech.impact.t) return;
-      const { uke } = solve(tech, t);
-      assert.ok(
-        uke.pelvis[1] < 6.5 && uke.shoulders.l[1] < 7,
-        `pelvis ${uke.pelvis[1].toFixed(1)}, shoulder ${uke.shoulders.l[1].toFixed(1)} at ${t.toFixed(2)}`,
-      );
-    }));
+  const impact = tech.impact;
+  if (impact)
+    test(`${tech.id}: uke is on the mat at impact and stays there`, () =>
+      each(tech.duration, (t) => {
+        if (t < impact.t) return;
+        const { uke } = solve(tech, t);
+        assert.ok(
+          uke.pelvis[1] < 6.5 && uke.shoulders.l[1] < 7,
+          `pelvis ${uke.pelvis[1].toFixed(1)}, shoulder ${uke.shoulders.l[1].toFixed(1)} at ${t.toFixed(2)}`,
+        );
+      }));
 
   test(`${tech.id}: arms never bend behind the back`, () =>
     each(tech.duration, (t) => {
