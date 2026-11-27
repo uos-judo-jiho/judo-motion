@@ -1,4 +1,4 @@
-import type { TechniqueCategoryId } from "./categories.ts";
+import type { TechniqueCategoryId } from "./categories";
 
 export type TechniqueRelease = `v${number}.${number}.${number}`;
 

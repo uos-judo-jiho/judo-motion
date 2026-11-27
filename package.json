@@ -24,19 +24,19 @@
     "./package.json": "./package.json"
   },
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --configLoader runner",
     "build": "pnpm build:lib && pnpm build:app",
     "build:lib": "rm -rf dist && tsdown",
-    "build:app": "vite build",
-    "preview": "vite preview",
+    "build:app": "vite build --configLoader runner",
+    "preview": "vite preview --configLoader runner",
     "type-check": "tsc --noEmit",
     "lint": "oxlint --type-aware --max-warnings=0",
     "lint:fix": "oxlint --type-aware --fix",
     "format": "oxfmt .",
     "format:check": "oxfmt --check .",
-    "test": "node --test test/*.test.ts",
+    "test": "node --import tsx --test test/*.test.ts",
     "check": "pnpm format:check && pnpm lint && pnpm type-check && pnpm test",
-    "export": "node server/cli.ts",
+    "export": "node --import tsx server/cli.ts",
     "prepack": "pnpm build:lib",
     "clean": "rm -rf dist dist-app"
   },
@@ -53,6 +53,7 @@
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
     "tsdown": "^0.23.7",
+    "tsx": "^4.23.15",
     "typescript": "^7.0.2",
     "vite": "^8.3.8"
   },

@@ -1,11 +1,11 @@
 /** Bodies are solid, knees are hinges, motion is continuous. Checked between baked frames too. */
 import assert from "node:assert/strict";
 import test from "node:test";
-import { capsules, collides, overlap } from "../src/core/physics.ts";
-import { SIDES, carry, dot, length, sub, unit } from "../src/core/rig.ts";
-import type { V3 } from "../src/core/rig.ts";
-import { solve } from "../src/core/scene.ts";
-import { TECHNIQUES } from "../src/techniques/index.ts";
+import { capsules, collides, overlap } from "../src/core/physics";
+import { SIDES, carry, dot, length, sub, unit } from "../src/core/rig";
+import type { V3 } from "../src/core/rig";
+import { solve } from "../src/core/scene";
+import { TECHNIQUES } from "../src/techniques/index";
 
 const each = (duration: number, f: (t: number) => void) => {
   for (let t = 0; t < duration; t += 1 / 144) f(t);

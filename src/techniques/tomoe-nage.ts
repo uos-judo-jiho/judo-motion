@@ -1,6 +1,6 @@
-import type { Pose } from "../core/rig.ts";
-import type { Technique } from "../core/scene.ts";
-import { KUMI, feet, grip, sideFall } from "./common.ts";
+import type { Pose } from "../core/rig";
+import type { Technique } from "../core/scene";
+import { KUMI, feet, grip, sideFall } from "./common";
 
 const tori: Pose = {
   p: [31, 22.6, -1],

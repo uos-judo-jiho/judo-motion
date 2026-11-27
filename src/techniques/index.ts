@@ -1,11 +1,11 @@
-import type { Technique } from "../core/scene.ts";
-import { kesaGatame } from "./kesa-gatame.ts";
-import { koUchiGariV1, koUchiGariV2 } from "./ko-uchi-gari.ts";
-import { osotoGari } from "./osoto-gari.ts";
-import { seoiNage } from "./seoi-nage.ts";
-import type { TechniqueName } from "../ids.ts";
-import { tomoeNage } from "./tomoe-nage.ts";
-import { uchiMata } from "./uchi-mata.ts";
+import type { Technique } from "../core/scene";
+import { kesaGatame } from "./kesa-gatame";
+import { koUchiGariV1, koUchiGariV2 } from "./ko-uchi-gari";
+import { osotoGari } from "./osoto-gari";
+import { seoiNage } from "./seoi-nage";
+import type { TechniqueName } from "../ids";
+import { tomoeNage } from "./tomoe-nage";
+import { uchiMata } from "./uchi-mata";
 
 /** Add a technique by writing one data file and listing it here. */
 export const TECHNIQUES: Technique[] = [

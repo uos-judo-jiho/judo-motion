@@ -1,13 +1,9 @@
 /** npm run export -- --format gif --size 256 [--technique seoi-nage] [--view side] [--fps 25] [--mat] [--tori bear --uke cat --toriGi black --ukeGi red] */
 import { parseArgs } from "node:util";
-import { definitionFor } from "../src/techniques/definitions.ts";
-import { TECHNIQUE_CATEGORIES } from "../src/techniques/categories.ts";
-import {
-  TECHNIQUES,
-  findTechnique,
-  variantsOf,
-} from "../src/techniques/index.ts";
-import { exportJob, parseJob } from "./exporter.ts";
+import { definitionFor } from "../src/techniques/definitions";
+import { TECHNIQUE_CATEGORIES } from "../src/techniques/categories";
+import { TECHNIQUES, findTechnique, variantsOf } from "../src/techniques/index";
+import { exportJob, parseJob } from "./exporter";
 
 /** A base id exports every variant of it. */
 const variantIds = (id: string) => {

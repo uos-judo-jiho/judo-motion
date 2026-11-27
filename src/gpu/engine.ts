@@ -3,13 +3,13 @@
  * draw call, then each view copies its tile to its own small canvas. Upscaling is left to the
  * compositor (image-rendering: pixelated), so cost depends on art pixels, not screen pixels.
  */
-import { rasterize } from "../core/raster.ts";
-import type { CameraView } from "../core/camera.ts";
-import { MAX_PRIMS, STRIDE, buildScene, createScene } from "../core/scene.ts";
-import type { Grid } from "../ids.ts";
-import type { Cast } from "../characters/index.ts";
-import type { Technique } from "../core/scene.ts";
-import { FRAG, VERT } from "./shader.ts";
+import { rasterize } from "../core/raster";
+import type { CameraView } from "../core/camera";
+import { MAX_PRIMS, STRIDE, buildScene, createScene } from "../core/scene";
+import type { Grid } from "../ids";
+import type { Cast } from "../characters/index";
+import type { Technique } from "../core/scene";
+import { FRAG, VERT } from "./shader";
 
 export interface View {
   canvas: HTMLCanvasElement;

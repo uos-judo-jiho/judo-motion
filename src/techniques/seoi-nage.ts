@@ -1,4 +1,4 @@
-import type { Technique } from "../core/scene.ts";
+import type { Technique } from "../core/scene";
 import {
   CARRIED,
   FALLEN,
@@ -9,7 +9,7 @@ import {
   opening,
   sideFall,
   ukeStand,
-} from "./common.ts";
+} from "./common";
 
 // Parallel "11" stance set on a diagonal: both feet side by side, perpendicular to the direction tori faces.
 const YAW = 35,

@@ -1,19 +1,19 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { FORMATS, parseJob } from "../server/exporter.ts";
-import { over, renderMat } from "../src/core/mat.ts";
-import { rasterize } from "../src/core/raster.ts";
-import { CAMERA_VIEWS, cameraPoint, worldPoint } from "../src/core/camera.ts";
-import { BONES, SIDES, length, sub } from "../src/core/rig.ts";
-import type { V3 } from "../src/core/rig.ts";
+import { FORMATS, parseJob } from "../server/exporter";
+import { over, renderMat } from "../src/core/mat";
+import { rasterize } from "../src/core/raster";
+import { CAMERA_VIEWS, cameraPoint, worldPoint } from "../src/core/camera";
+import { BONES, SIDES, length, sub } from "../src/core/rig";
+import type { V3 } from "../src/core/rig";
 import {
   DEPTH_SORTED_GROUP,
   STRIDE,
   buildScene,
   createScene,
   solve,
-} from "../src/core/scene.ts";
-import { TECHNIQUES } from "../src/techniques/index.ts";
+} from "../src/core/scene";
+import { TECHNIQUES } from "../src/techniques/index";
 
 const near = (a: number, b: number, m: string) =>
   assert.ok(Math.abs(a - b) < 1e-6, `${m}: ${a} != ${b}`);

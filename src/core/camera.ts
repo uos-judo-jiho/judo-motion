@@ -1,5 +1,5 @@
-import { WORLD } from "./rig.ts";
-import type { V3 } from "./rig.ts";
+import { WORLD } from "./rig";
+import type { V3 } from "./rig";
 
 export const CAMERA_VIEWS = ["front", "three-quarter", "side"] as const;
 export type CameraView = (typeof CAMERA_VIEWS)[number];

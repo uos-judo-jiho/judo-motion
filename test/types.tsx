@@ -6,14 +6,14 @@ import {
   TECHNIQUES,
   TECHNIQUE_CATEGORIES,
   isTechnique,
-} from "../src/react.ts";
+} from "../src/react";
 import type {
   JudoMotionElement,
   JudoMotionProps,
   TechniqueCategoryId,
   TechniqueCategoryInfo,
   TechniqueName,
-} from "../src/react.ts";
+} from "../src/react";
 
 const ref = createRef<JudoMotionElement>();
 

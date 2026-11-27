@@ -1,18 +1,18 @@
 /** Technique data + time -> list of drawing primitives. Pure, shared by GPU and CPU renderers. */
-import { DEFAULT_CAST } from "../characters/index.ts";
-import type { Cast } from "../characters/index.ts";
-import { cameraDirection, cameraPoint } from "./camera.ts";
-import type { CameraView } from "./camera.ts";
-import { drawHead } from "../characters/head.ts";
-import { DUST, IMPACT, LINE } from "./palette.ts";
-import { solve } from "./physics.ts";
-import { GROUND, SIDES, WORLD, add, mix, project, unit } from "./rig.ts";
-import type { Limb, V2, V3 } from "./rig.ts";
-import type { Technique } from "./types.ts";
+import { DEFAULT_CAST } from "../characters/index";
+import type { Cast } from "../characters/index";
+import { cameraDirection, cameraPoint } from "./camera";
+import type { CameraView } from "./camera";
+import { drawHead } from "../characters/head";
+import { DUST, IMPACT, LINE } from "./palette";
+import { solve } from "./physics";
+import { GROUND, SIDES, WORLD, add, mix, project, unit } from "./rig";
+import type { Limb, V2, V3 } from "./rig";
+import type { Technique } from "./types";
 
-export type { Grip, Key, Phase, Technique } from "./types.ts";
-export type { CameraView } from "./camera.ts";
-export { solve } from "./physics.ts";
+export type { Grip, Key, Phase, Technique } from "./types";
+export type { CameraView } from "./camera";
+export { solve } from "./physics";
 
 /** Flat layout, 12 floats each: ax ay bx by | ra rb colour owner+8*depthSorted+16*group | za zb (depth) shade inner-line. Colours are 24-bit ints. */
 export const STRIDE = 12;

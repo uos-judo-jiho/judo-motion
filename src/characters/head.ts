@@ -1,9 +1,9 @@
 /** Head styles, built around the head's centre from capsules. All fit the ~4.8 radius the contact solver assumes. */
-import { cameraDirection } from "../core/camera.ts";
-import type { CameraView } from "../core/camera.ts";
-import { SIDES, add, sign } from "../core/rig.ts";
-import type { Body, V3 } from "../core/rig.ts";
-import type { Character, Rgb } from "./index.ts";
+import { cameraDirection } from "../core/camera";
+import type { CameraView } from "../core/camera";
+import { SIDES, add, sign } from "../core/rig";
+import type { Body, V3 } from "../core/rig";
+import type { Character, Rgb } from "./index";
 
 export interface Pen {
   put: (a: V3, b: V3, ra: number, rb: number, col: Rgb, shade?: Rgb) => void;

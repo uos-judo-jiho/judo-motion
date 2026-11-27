@@ -1,7 +1,7 @@
-import { LINE } from "../core/palette.ts";
-import { LIGHT } from "../core/raster.ts";
-import { DEPTH_SORTED_GROUP } from "../core/scene.ts";
-import { WORLD } from "../core/rig.ts";
+import { LINE } from "../core/palette";
+import { LIGHT } from "../core/raster";
+import { DEPTH_SORTED_GROUP } from "../core/scene";
+import { WORLD } from "../core/rig";
 
 /** One instanced quad per visible animation; every instance reads its primitives from one float texture row. */
 export const VERT = `#version 300 es

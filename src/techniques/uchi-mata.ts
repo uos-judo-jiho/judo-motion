@@ -1,5 +1,5 @@
-import type { Pose } from "../core/rig.ts";
-import type { Technique } from "../core/scene.ts";
+import type { Pose } from "../core/rig";
+import type { Technique } from "../core/scene";
 import {
   CARRIED,
   FALLEN,
@@ -11,7 +11,7 @@ import {
   opening,
   sideFall,
   ukeStand,
-} from "./common.ts";
+} from "./common";
 
 const STANCE = feet([34, 3.5], [25, -4]);
 const UKE: Pose = { ...ukeStand(29.5), feet: STANCE };

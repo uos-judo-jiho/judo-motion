@@ -1,8 +1,8 @@
-import { rasterize } from "../core/raster.ts";
-import { project } from "../core/rig.ts";
-import { STRIDE, buildScene, createScene, solve } from "../core/scene.ts";
-import { TECHNIQUES } from "../techniques/index.ts";
-import { resolveCast } from "./index.ts";
+import { rasterize } from "../core/raster";
+import { project } from "../core/rig";
+import { STRIDE, buildScene, createScene, solve } from "../core/scene";
+import { TECHNIQUES } from "../techniques/index";
+import { resolveCast } from "./index";
 
 const SIZE = 22,
   GRID = 96;

@@ -11,9 +11,9 @@ import {
   solveArm,
   sub,
   unit,
-} from "./rig.ts";
-import type { Body, Limb, Offsets, Pair, Pose, Side, V3 } from "./rig.ts";
-import type { Grip, Technique } from "./types.ts";
+} from "./rig";
+import type { Body, Limb, Offsets, Pair, Pose, Side, V3 } from "./rig";
+import type { Grip, Technique } from "./types";
 
 const CHANNELS = [
   "yaw",

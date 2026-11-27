@@ -3,8 +3,8 @@
  * and a solid mat actually allow them to be. It runs once per technique and stores corrections, so
  * playback cost is a table lookup. Deterministic: same technique, same result, on page and in export.
  */
-import { assemble, mixOffsets, motionOf, shift, vectors } from "./motion.ts";
-import type { Intent, Solved } from "./motion.ts";
+import { assemble, mixOffsets, motionOf, shift, vectors } from "./motion";
+import type { Intent, Solved } from "./motion";
 import {
   ANKLE,
   BONES,
@@ -16,9 +16,9 @@ import {
   noOffsets,
   sub,
   unit,
-} from "./rig.ts";
-import type { Body, Limb, Offsets, Pair, Side, V3 } from "./rig.ts";
-import type { Technique } from "./types.ts";
+} from "./rig";
+import type { Body, Limb, Offsets, Pair, Side, V3 } from "./rig";
+import type { Technique } from "./types";
 
 export type Part =
   | "torso"
