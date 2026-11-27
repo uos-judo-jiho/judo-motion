@@ -25,9 +25,10 @@ const drawn: Pose = {
 };
 
 const shared = {
-  ko: "안뒷축걸기",
+  ko: "안뒤축걸기",
   ja: "小内刈",
   romaji: "Ko-uchi-gari",
+  canonicalId: "ko-uchi-gari" as const,
   group: "발기술",
   ukemi: "back" as const,
   duration: 3.2,
@@ -129,7 +130,7 @@ const reap = (support: number, lead = 0): Key[] => [
 export const koUchiGariV1: Technique = {
   ...shared,
   id: "ko-uchi-gari-v1",
-  variant: { of: "ko-uchi-gari", name: "v1", label: "끌어서" },
+  variant: { of: "ko-uchi-gari", name: "v1", label: "끌어서 걸기" },
   draws: true,
   note: "상대를 끌어 오른발에 체중을 싣게 한 뒤, 오른발로 상대 오른발 뒤꿈치를 안쪽에서 쓸어 뒤로 넘긴다.",
   phases: [
@@ -214,7 +215,7 @@ const LEAD = 0.4;
 export const koUchiGariV2: Technique = {
   ...shared,
   id: "ko-uchi-gari-v2",
-  variant: { of: "ko-uchi-gari", name: "v2", label: "들어가서" },
+  variant: { of: "ko-uchi-gari", name: "v2", label: "들어가서 걸기" },
   duration: shared.duration - LEAD,
   impact: { ...shared.impact, t: 1.26 },
   poster: shared.poster - LEAD,

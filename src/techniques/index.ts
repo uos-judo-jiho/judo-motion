@@ -26,4 +26,4 @@ export const variantsOf = (id: string): Technique[] =>
 export const findTechnique = (id: string): Technique | undefined =>
   TECHNIQUES.find((t) => t.id === id) ?? variantsOf(id)[0];
 export const fullName = (t: Technique): string =>
-  t.variant ? `${t.ko} ${t.variant.name} ${t.variant.label}` : t.ko;
+  t.variant ? `${t.ko} (${t.variant.label})` : t.ko;

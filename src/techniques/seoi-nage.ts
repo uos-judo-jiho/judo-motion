@@ -20,6 +20,7 @@ export const seoiNage: Technique = {
   ko: "업어치기",
   ja: "背負投",
   romaji: "Seoi-nage",
+  canonicalId: "seoi-nage",
   group: "손기술",
   note: "오른발부터 파고들어 두 발을 11자로 나란히 놓고, 상대를 등에 업어 어깨 너머로 메친다.",
   ukemi: "side",

@@ -18,7 +18,8 @@ pnpm dev        # http://localhost:5180
 pnpm test
 pnpm run export --format gif --size 128                # 전체 기술
 pnpm run export -t seoi-nage --format webp --size 512  # 하나만
-pnpm run export -t ko-uchi-gari                        # 모든 방식(v1, v2)
+pnpm run export -t ko-uchi-gari                        # 모든 방식
+pnpm run export --category ashi-waza                  # 발기술만
 pnpm run export --mat                                  # 다다미 포함
 pnpm run export -t seoi-nage --view side               # 측면에서 내보내기
 pnpm run export -t kesa-gatame --view three-quarter --mat # 곁누르기 사선 뷰
@@ -45,7 +46,7 @@ CPU 렌더러(`core/raster.ts`)와 셰이더(`gpu/shader.ts`)는 같은 알고�
 - 받는 사람은 측방낙법: 왼다리는 펴고 오른무릎은 90도. 뒤로 넘어가는 기술은 후방낙법(`ukemi: 'back'`): 등을 평평하게, 턱을 당기고 두 손으로 바닥을 친다.
 - 업어치기: 두 발은 11자, 사선으로 놓는다.
 - 밭다리후리기: 오른다리로 상대 오른다리를 건다.
-- 안뒷축걸기: 오른 발바닥으로 상대 오른발 뒤꿈치를 안쪽에서 쓴다. v1은 끌어서(`draws: true`), v2는 들어가서. v1·v2는 우열이 아니라 방식의 차이다.
+- 안뒤축걸기: 오른 발바닥으로 상대 오른발 뒤꿈치를 안쪽에서 쓴다. 끌어서 걸기(`draws: true`)와 들어가서 걸기 두 방식이 있다. 개별 내보내기에는 각각 기존 재생 ID `ko-uchi-gari-v1`과 `ko-uchi-gari-v2`를 사용한다.
 - 배대뒤치기: 오른발이 상대 두 발 사이로 깊이 들어가고, 따라오는 왼발을 배에 대어 누우며 머리 너머로 넘긴다. 마무리는 왼손만 소매를 잡는다(`keepsLapel`).
 - 허벅다리걸기: 오른발이 깊이 들어가고, 오른 팔꿈치는 하늘을 향한다.
 
@@ -90,8 +91,41 @@ import { JudoMotion } from "judo-motion/react";
 
 - 속성: `technique` `view`(`front`/`three-quarter`/`side`) `tori` `uke` `tori-gi` `uke-gi` `grid`(64/96/128) `fps`(0=화면 주사율) `speed` `paused` `mat`(빈 값/`wide`)
 - 프로퍼티: `view` `currentTime`(초) `info` `onFrame`
-- 목록과 검사: `TECHNIQUES` `CHARACTERS` `GIS` `isTechnique` `isCharacter` `isGi`
+- 목록과 검사: `TECHNIQUES` `TECHNIQUE_CATEGORIES` `CHARACTERS` `GIS` `isTechnique` `isCharacter` `isGi`
 - 타입: `TechniqueName` `CharacterId` `GiId` `JudoMotionElement` `JudoMotionProps`
+
+### 기술 분류
+
+`TECHNIQUES`에는 재생하고 내보낼 수 있는 기술과 변형이 들어 있습니다.
+`category`는 말단 분류 ID이며, `TECHNIQUE_CATEGORIES`에서 대분류, 중분류, 한글 명칭을 조회할 수 있습니다. 기존 `group`은 표시 문자열이며 `kind`는 애니메이션 유형입니다.
+
+```ts
+import { TECHNIQUES, TECHNIQUE_CATEGORIES } from "@uos-judo-jiho/judo-motion";
+
+const footTechniques = TECHNIQUES.filter((t) => t.category === "ashi-waza");
+const grappling = TECHNIQUES.filter(
+  (t) => TECHNIQUE_CATEGORIES[t.category].group === "katame-waza",
+);
+```
+
+CLI의 `--category`는 말단 분류 ID뿐 아니라 `nage-waza` 같은 대분류와 `tachi-waza` 같은 중분류도 받습니다. `--technique`와 함께 지정하면 두 조건을 모두 충족하는 기술을 내보냅니다.
+
+### 전체 기술 카탈로그
+
+`TECHNIQUE_CATALOG`는 고도칸 100개 기술의 표준 ID, 이름, 분류와 연결된 애니메이션 ID를 제공합니다. 카탈로그의 `id`는 표준 ID이며 공개 재생 ID와 다를 수 있습니다. 예를 들어 `o-soto-gari`에는 기존 재생 ID `osoto-gari`가 연결됩니다. 한국어 임시 번역에는 `provisionalKo: true`가 표시됩니다. [분류 및 한국어 이름 출처](https://github.com/uos-judo-jiho/judo-motion/issues/7#issuecomment-7211866548)
+
+```ts
+import {
+  TECHNIQUE_CATALOG,
+  TECHNIQUE_STATUS,
+} from "@uos-judo-jiho/judo-motion";
+
+const backlog = TECHNIQUE_CATALOG.filter(
+  (technique) => technique.__meta.status === TECHNIQUE_STATUS.UNIMPLEMENTED,
+);
+```
+
+`__meta.status`가 `available`이면 현재 소스에서 재생할 수 있습니다. `__meta.since`는 해당 기술의 애니메이션이 처음 포함된 태그를 확인할 수 있을 때만 표시합니다. `TECHNIQUES`의 각 애니메이션에서도 `canonicalId`와 동일 기술의 `__meta`를 조회할 수 있습니다.
 
 ### 릴리스
 

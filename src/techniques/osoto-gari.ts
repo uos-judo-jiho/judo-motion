@@ -23,6 +23,7 @@ export const osotoGari: Technique = {
   ko: "밭다리후리기",
   ja: "大外刈",
   romaji: "Osoto-gari",
+  canonicalId: "o-soto-gari",
   group: "발기술",
   note: "오른발이 들어가고 왼발이 상대 옆에 빠르게 따라붙는 동시에, 오른다리로 상대의 오른다리를 후려 넘긴다.",
   ukemi: "side",

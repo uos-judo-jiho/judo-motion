@@ -21,6 +21,7 @@ export const uchiMata: Technique = {
   ko: "허벅다리걸기",
   ja: "内股",
   romaji: "Uchi-mata",
+  canonicalId: "uchi-mata",
   group: "발기술",
   note: "오른발이 깊이 들어가고 왼발이 따라 들어간 뒤, 오른다리로 상대 안쪽 허벅다리를 차올려 메친다.",
   ukemi: "side",

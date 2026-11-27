@@ -50,6 +50,7 @@ export const kesaGatame: Technique = {
   ko: "곁누르기",
   ja: "袈裟固",
   romaji: "Kesa-gatame",
+  canonicalId: "kesa-gatame",
   group: "누르기",
   kind: "osaekomi",
   note: "받기의 오른쪽에서 머리와 오른팔을 감싸고, 두 다리로 지지하며 누른다.",
