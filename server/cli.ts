@@ -1,6 +1,11 @@
 /** npm run export -- --format gif --size 256 [--technique seoi-nage] [--view side] [--fps 25] [--mat] [--tori bear --uke cat --toriGi black --ukeGi red] */
 import { parseArgs } from "node:util";
-import { TECHNIQUES, variantsOf } from "../src/techniques/index.ts";
+import { TECHNIQUE_CATEGORIES } from "../src/techniques/categories.ts";
+import {
+  TECHNIQUES,
+  findTechnique,
+  variantsOf,
+} from "../src/techniques/index.ts";
 import { exportJob, parseJob } from "./exporter.ts";
 
 /** A base id exports every variant of it. */
@@ -11,6 +16,7 @@ const variantIds = (id: string) => {
 const { values } = parseArgs({
   options: {
     technique: { type: "string", short: "t" },
+    category: { type: "string" },
     format: { type: "string", default: "gif" },
     size: { type: "string", default: "256" },
     fps: { type: "string", default: "25" },
@@ -23,11 +29,26 @@ const { values } = parseArgs({
   },
 });
 try {
-  const jobs = (
-    values.technique
-      ? variantIds(values.technique)
-      : TECHNIQUES.map((t) => t.id)
-  ).map((technique) => parseJob({ ...values, technique }));
+  let ids = values.technique
+    ? variantIds(values.technique)
+    : TECHNIQUES.map((t) => t.id);
+  if (values.category !== undefined) {
+    const matches = Object.values(TECHNIQUE_CATEGORIES).filter(
+      ({ id, group, subgroup }) =>
+        values.category === id ||
+        values.category === group ||
+        values.category === subgroup,
+    );
+    if (!matches.length) throw new Error(`알 수 없는 분류: ${values.category}`);
+    ids = ids.filter((id) => {
+      const technique = findTechnique(id);
+      if (!technique) throw new Error(`알 수 없는 기술: ${id}`);
+      return matches.some((category) => category.id === technique.category);
+    });
+    if (!ids.length)
+      throw new Error(`내보낼 기술이 없는 분류: ${values.category}`);
+  }
+  const jobs = ids.map((technique) => parseJob({ ...values, technique }));
   for (const r of await Promise.all(jobs.map(exportJob)))
     console.log(`${r.path}  ${(r.bytes / 1024).toFixed(1)}KB  ${r.ms}ms`);
 } catch (e) {

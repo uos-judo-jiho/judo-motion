@@ -28,6 +28,7 @@ const shared = {
   ko: "안뒷축걸기",
   ja: "小内刈",
   romaji: "Ko-uchi-gari",
+  category: "ashi-waza" as const,
   group: "발기술",
   ukemi: "back" as const,
   duration: 3.2,

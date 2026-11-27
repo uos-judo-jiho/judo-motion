@@ -1,10 +1,17 @@
 /** Compile-time checks of the public API, run by `pnpm type-check`. Never executed. */
 import { createRef } from "react";
 import type { ReactElement } from "react";
-import { JudoMotion, TECHNIQUES, isTechnique } from "../src/react.ts";
+import {
+  JudoMotion,
+  TECHNIQUES,
+  TECHNIQUE_CATEGORIES,
+  isTechnique,
+} from "../src/react.ts";
 import type {
   JudoMotionElement,
   JudoMotionProps,
+  TechniqueCategoryId,
+  TechniqueCategoryInfo,
   TechniqueName,
 } from "../src/react.ts";
 
@@ -52,3 +59,9 @@ export const fromUrl = (id: string): TechniqueName =>
 export const props: JudoMotionProps = { technique: TECHNIQUES[0]!.id };
 export const element: JudoMotionElement | null =
   document.querySelector("judo-motion");
+
+export const categoryId: TechniqueCategoryId = TECHNIQUES[0]!.category;
+export const categoryInfo: TechniqueCategoryInfo =
+  TECHNIQUE_CATEGORIES[categoryId];
+// @ts-expect-error only leaf categories can be assigned to a technique
+export const invalidCategory: TechniqueCategoryId = "nage-waza";

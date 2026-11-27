@@ -8,11 +8,12 @@ import { CHARACTER_IDS, GI_IDS, TECHNIQUE_IDS } from "../src/ids.ts";
 import {
   JudoMotion,
   TECHNIQUES as INFO,
+  TECHNIQUE_CATEGORIES,
   isCharacter,
   isGi,
   isTechnique,
 } from "../src/react.ts";
-import { TECHNIQUES } from "../src/techniques/index.ts";
+import { TECHNIQUES, variantsOf } from "../src/techniques/index.ts";
 
 test("every public id has data, in order", () => {
   assert.deepEqual(
@@ -63,4 +64,44 @@ test("renders on the server with dashed attributes and a reserved box", () => {
   assert.match(html, / mat=""/);
   assert.ok(!html.includes("paused"), html);
   assert.ok(!html.includes("uke"), html);
+});
+
+test("playable techniques expose their category without changing group or kind", () => {
+  assert.deepEqual(
+    INFO.map(({ id, category, group, kind }) => [id, category, group, kind]),
+    [
+      ["seoi-nage", "te-waza", "손기술", "throw"],
+      ["uchi-mata", "ashi-waza", "발기술", "throw"],
+      ["osoto-gari", "ashi-waza", "발기술", "throw"],
+      ["ko-uchi-gari-v1", "ashi-waza", "발기술", "throw"],
+      ["ko-uchi-gari-v2", "ashi-waza", "발기술", "throw"],
+      ["tomoe-nage", "ma-sutemi-waza", "누우며메치기", "throw"],
+      ["kesa-gatame", "osaekomi-waza", "누르기", "osaekomi"],
+    ],
+  );
+  assert.equal(
+    new Set(variantsOf("ko-uchi-gari").map((t) => t.category)).size,
+    1,
+  );
+  assert.ok(!isTechnique("ippon-seoi-nage"));
+});
+
+test("every category exposes its Kodokan classification path", () => {
+  const paths = Object.entries(TECHNIQUE_CATEGORIES).map(([key, category]) => {
+    assert.equal(key, category.id);
+    assert.ok(category.nameKo && category.nameJaRomanized);
+    return [category.group, category.subgroup, category.id]
+      .filter(Boolean)
+      .join("/");
+  });
+  assert.deepEqual(paths.sort(), [
+    "katame-waza/kansetsu-waza",
+    "katame-waza/osaekomi-waza",
+    "katame-waza/shime-waza",
+    "nage-waza/sutemi-waza/ma-sutemi-waza",
+    "nage-waza/sutemi-waza/yoko-sutemi-waza",
+    "nage-waza/tachi-waza/ashi-waza",
+    "nage-waza/tachi-waza/koshi-waza",
+    "nage-waza/tachi-waza/te-waza",
+  ]);
 });

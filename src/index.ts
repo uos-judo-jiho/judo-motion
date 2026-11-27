@@ -16,6 +16,13 @@ export type {
   TechniqueId,
   TechniqueName,
 } from "./ids.ts";
+export { TECHNIQUE_CATEGORIES } from "./techniques/categories.ts";
+export type {
+  TechniqueCategoryId,
+  TechniqueCategoryInfo,
+  TechniqueGroupId,
+  TechniqueSubgroupId,
+} from "./techniques/categories.ts";
 export type { TechniqueInfo } from "./techniques/info.ts";
 export { CAMERA_VIEWS } from "./core/camera.ts";
 export type { CameraView } from "./core/camera.ts";

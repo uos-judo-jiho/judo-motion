@@ -8,6 +8,7 @@ import {
 } from "./characters/index.ts";
 import { portrait } from "./characters/portrait.ts";
 import type { JudoMotionElement } from "./gpu/element.ts";
+import { TECHNIQUE_CATEGORIES } from "./techniques/categories.ts";
 import { engine, stats } from "./gpu/engine.ts";
 import {
   TECHNIQUES,
@@ -34,7 +35,8 @@ function select(id: string) {
   hero.setAttribute("technique", t.id);
   $("ko").textContent = t.ko;
   $("ja").textContent = t.ja;
-  $("meta").textContent = `${t.romaji} / ${t.group}`;
+  $("meta").textContent =
+    `${t.romaji} / ${TECHNIQUE_CATEGORIES[t.category].nameKo}`;
   $("note").textContent = t.note;
   phases.replaceChildren(
     ...t.phases.map((p, i) => {

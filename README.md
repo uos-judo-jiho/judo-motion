@@ -19,6 +19,7 @@ pnpm test
 pnpm run export --format gif --size 128                # 전체 기술
 pnpm run export -t seoi-nage --format webp --size 512  # 하나만
 pnpm run export -t ko-uchi-gari                        # 모든 방식(v1, v2)
+pnpm run export --category ashi-waza                  # 발기술만
 pnpm run export --mat                                  # 다다미 포함
 pnpm run export -t seoi-nage --view side               # 측면에서 내보내기
 pnpm run export -t kesa-gatame --view three-quarter --mat # 곁누르기 사선 뷰
@@ -90,8 +91,24 @@ import { JudoMotion } from "judo-motion/react";
 
 - 속성: `technique` `view`(`front`/`three-quarter`/`side`) `tori` `uke` `tori-gi` `uke-gi` `grid`(64/96/128) `fps`(0=화면 주사율) `speed` `paused` `mat`(빈 값/`wide`)
 - 프로퍼티: `view` `currentTime`(초) `info` `onFrame`
-- 목록과 검사: `TECHNIQUES` `CHARACTERS` `GIS` `isTechnique` `isCharacter` `isGi`
+- 목록과 검사: `TECHNIQUES` `TECHNIQUE_CATEGORIES` `CHARACTERS` `GIS` `isTechnique` `isCharacter` `isGi`
 - 타입: `TechniqueName` `CharacterId` `GiId` `JudoMotionElement` `JudoMotionProps`
+
+### 기술 분류
+
+`TECHNIQUES`에는 재생하고 내보낼 수 있는 기술과 변형이 들어 있습니다.
+`category`는 말단 분류 ID이며, `TECHNIQUE_CATEGORIES`에서 대분류, 중분류, 한글 명칭을 조회할 수 있습니다. 기존 `group`은 표시 문자열이며 `kind`는 애니메이션 유형입니다.
+
+```ts
+import { TECHNIQUES, TECHNIQUE_CATEGORIES } from "judo-motion";
+
+const footTechniques = TECHNIQUES.filter((t) => t.category === "ashi-waza");
+const grappling = TECHNIQUES.filter(
+  (t) => TECHNIQUE_CATEGORIES[t.category].group === "katame-waza",
+);
+```
+
+CLI의 `--category`는 말단 분류 ID뿐 아니라 `nage-waza` 같은 대분류와 `tachi-waza` 같은 중분류도 받습니다. `--technique`와 함께 지정하면 두 조건을 모두 충족하는 기술을 내보냅니다.
 
 ### 릴리스
 
