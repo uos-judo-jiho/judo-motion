@@ -1,5 +1,6 @@
 import { LINE } from "../core/palette.ts";
 import { LIGHT } from "../core/raster.ts";
+import { DEPTH_SORTED_GROUP } from "../core/scene.ts";
 import { WORLD } from "../core/rig.ts";
 
 /** One instanced quad per visible animation; every instance reads its primitives from one float texture row. */
@@ -48,7 +49,11 @@ void main() {
     float k = clamp(dot(p - s.xy, e) / max(dot(e, e), 1e-6), 0.0, 1.0);
     vec2 o = p - s.xy - e * k;
     float r = mix(m.x, m.y, k), d = length(o) - r, z = mix(q.x, q.y, k);
-    if (d <= 0.0) { hit = int(dot(o, LIGHT) < -0.38 * r ? q.z : m.z); front = max(front, z + sqrt(max(0.0, r * r - dot(o, o)))); }
+    if (d <= 0.0) {
+      float surface = z + sqrt(max(0.0, r * r - dot(o, o)));
+      if ((tg & ${DEPTH_SORTED_GROUP}) == 0 || surface >= front) hit = int(dot(o, LIGHT) < -0.38 * r ? q.z : m.z);
+      front = max(front, surface);
+    }
     if (d < best) { best = d; edge = z + 0.6 * r; }
   }
   flush(tag, hit, best, unit, front, edge, inner);

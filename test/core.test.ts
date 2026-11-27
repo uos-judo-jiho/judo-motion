@@ -6,7 +6,13 @@ import { rasterize } from "../src/core/raster.ts";
 import { CAMERA_VIEWS, cameraPoint, worldPoint } from "../src/core/camera.ts";
 import { BONES, SIDES, length, sub } from "../src/core/rig.ts";
 import type { V3 } from "../src/core/rig.ts";
-import { STRIDE, buildScene, createScene, solve } from "../src/core/scene.ts";
+import {
+  DEPTH_SORTED_GROUP,
+  STRIDE,
+  buildScene,
+  createScene,
+  solve,
+} from "../src/core/scene.ts";
 import { TECHNIQUES } from "../src/techniques/index.ts";
 
 const near = (a: number, b: number, m: string) =>
@@ -173,4 +179,32 @@ test("export jobs reject anything outside the allow-list", () => {
     { technique: "seoi-nage", view: "orbit" },
   ])
     assert.throws(() => parseJob(bad));
+});
+
+test("overlapping limb and head primitives keep the closest surface color", () => {
+  const scene = createScene();
+  const point = 48.75; // Centre of pixel 32 at a 64-pixel grid.
+  const group = 16 + DEPTH_SORTED_GROUP + 1;
+  const capsule = (color: number, depth: number, tag: number) => [
+    point,
+    point,
+    point,
+    point,
+    4,
+    4,
+    color,
+    tag,
+    depth,
+    depth,
+    color,
+    0,
+  ];
+  const hair = 0x2c2e46;
+  scene.data.set(capsule(hair, 10, group));
+  scene.data.set(capsule(0xf4c49a, 4, group), STRIDE);
+  scene.data.set(capsule(0xa02c30, 8, 32 + DEPTH_SORTED_GROUP + 2), 2 * STRIDE);
+  scene.count = 3;
+  const pixels = rasterize(scene, 64);
+  const pixel = (32 * 64 + 32) * 4;
+  assert.deepEqual([...pixels.subarray(pixel, pixel + 4)], [44, 46, 70, 255]);
 });

@@ -1,5 +1,9 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import { drawHead } from "../src/characters/head.ts";
+import type { Pen } from "../src/characters/head.ts";
+import { CAMERA_VIEWS } from "../src/core/camera.ts";
+import { LINE } from "../src/core/palette.ts";
 import { parseJob } from "../server/exporter.ts";
 import {
   CHARACTERS,
@@ -13,8 +17,9 @@ import {
   STRIDE,
   buildScene,
   createScene,
+  solve,
 } from "../src/core/scene.ts";
-import { TECHNIQUES } from "../src/techniques/index.ts";
+import { TECHNIQUES, findTechnique } from "../src/techniques/index.ts";
 
 for (const c of CHARACTERS)
   test(`${c.id}: works in every technique, in frame, in both roles`, () => {
@@ -90,4 +95,64 @@ test("export accepts known looks, rejects others, and names files apart", () => 
   for (const bad of [{ tori: "../x" }, { uke: "nobody" }, { toriGi: "plaid" }])
     assert.throws(() => parseJob({ technique: "seoi-nage", ...bad }));
   assert.ok(GIS.length >= 2);
+});
+
+test("turning the camera preserves the world-space hair strokes", () => {
+  const { tori } = solve(TECHNIQUES[0], 0);
+  for (const character of CHARACTERS) {
+    if (!["short", "ponytail", "bun", "curly"].includes(character.head))
+      continue;
+    const strokes = CAMERA_VIEWS.map((view) => {
+      const hair: unknown[] = [];
+      const put: Pen["put"] = (...stroke) => {
+        if (character.hair.includes(stroke[4])) hair.push(stroke);
+      };
+      const ball: Pen["ball"] = (p, r, color, shade) =>
+        put(p, p, r, r, color, shade);
+      drawHead({ put, ball }, tori, character, LINE, view);
+      return hair;
+    });
+    assert.ok(strokes[0].length > 0, character.id);
+    assert.deepEqual(strokes[1], strokes[0], character.id);
+    assert.deepEqual(strokes[2], strokes[0], character.id);
+  }
+});
+
+test("brown hair stays visible across all camera presets in the opening pose", () => {
+  const cast = resolveCast({ tori: "brown", uke: "robot" });
+  const hair = cast.tori.character.hair;
+  for (const view of CAMERA_VIEWS) {
+    const frame = buildScene(TECHNIQUES[0], 0, createScene(), cast, view);
+    const pixels = rasterize(frame, 128);
+    let count = 0;
+    for (let i = 0; i < pixels.length; i += 4) {
+      const rgb = (pixels[i] << 16) | (pixels[i + 1] << 8) | pixels[i + 2];
+      if (pixels[i + 3] && hair.includes(rgb)) count++;
+    }
+    assert.ok(count >= 45, `${view}: ${count} visible hair pixels`);
+  }
+});
+
+test("uchi-mata keeps tori's navy hair visible throughout kake in side view", () => {
+  const cast = resolveCast({
+    tori: "navy",
+    uke: "curly",
+    toriGi: "blue",
+    ukeGi: "red",
+  });
+  const tech = findTechnique("uchi-mata")!;
+  const start = tech.phases.find(({ name }) => name === "걸기")!.t;
+  const end = tech.phases.find(({ name }) => name === "낙법")!.t;
+  for (let time = start; time < end; time += 1 / 60) {
+    const pixels = rasterize(
+      buildScene(tech, time, createScene(), cast, "side"),
+      128,
+    );
+    let count = 0;
+    for (let i = 0; i < pixels.length; i += 4) {
+      const rgb = (pixels[i] << 16) | (pixels[i + 1] << 8) | pixels[i + 2];
+      if (pixels[i + 3] && cast.tori.character.hair.includes(rgb)) count++;
+    }
+    assert.ok(count >= 30, `${time.toFixed(3)}: ${count} visible hair pixels`);
+  }
 });

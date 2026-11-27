@@ -1,4 +1,6 @@
 /** Head styles, built around the head's centre from capsules. All fit the ~4.8 radius the contact solver assumes. */
+import { cameraDirection } from "../core/camera.ts";
+import type { CameraView } from "../core/camera.ts";
 import { SIDES, add, sign } from "../core/rig.ts";
 import type { Body, V3 } from "../core/rig.ts";
 import type { Character, Rgb } from "./index.ts";
@@ -13,6 +15,7 @@ export function drawHead(
   body: Body,
   c: Character,
   line: Rgb,
+  view: CameraView,
 ): void {
   const { look, up, R } = body,
     [skin, skinD] = c.skin,
@@ -20,17 +23,20 @@ export function drawHead(
     accent = c.accent ?? skin;
   const h = (fw: number, u: number, sd = 0): V3 =>
     add(add(add(body.head, look, fw), up, u), R, sd);
-  const toward = look[2] > 0.45,
-    away = look[2] < -0.45;
+  const facing = cameraDirection(look, view)[2],
+    right = cameraDirection(R, view)[2],
+    toward = facing > 0.45,
+    away = facing < -0.45;
   /** Sides of the face that can be seen. */
-  const seen = SIDES.filter((s) => look[2] * 2.6 + R[2] * 2 * sign(s) > 0.7);
-  const eyes = (col: Rgb, fw = 2.7, u = 0.1) => {
+  const seen = SIDES.filter((s) => facing * 2.6 + right * 2 * sign(s) > 0.7);
+  // Place the eyes on the cheeks’ forward surface so the skull cannot cover them.
+  const eyes = (col: Rgb, fw = 4.05, u = 0.15) => {
     for (const s of seen)
       put(
-        h(fw, u, 1.5 * sign(s)),
-        h(fw, u - 0.8, 1.5 * sign(s)),
-        0.55,
-        0.55,
+        h(fw, u, 1.95 * sign(s)),
+        h(fw, u - 0.8, 1.95 * sign(s)),
+        0.68,
+        0.68,
         col,
       );
   };
@@ -38,33 +44,16 @@ export function drawHead(
   const nose = () => ball(h(4.3, -0.9), 0.75, skin);
   const ears = () => {
     for (const s of SIDES)
-      if (look[2] < 0.45 && R[2] * sign(s) > 0.5)
-        ball(h(-0.5, -0.9, 2.5 * sign(s)), 0.8, skinD);
+      if (facing < 0.45 && right * sign(s) > 0.5)
+        ball(h(-0.5, -0.95, 3.45 * sign(s)), 0.75, skinD);
   };
+  // Keep the hair geometry attached to the head as it turns. Details such as
+  // eyes can be culled by view, but the cap itself should never switch shapes.
   const hairCap = () => {
-    if (toward) {
-      ball(h(0, 0.8), 4.7, hair, hairD);
-      put(h(1, 0.2), h(1, -1.5), 3.6, 3.1, skin, skinD);
-      put(h(0, 3.2, -2.2), h(0, 3.2, 2.2), 2, 2, hair, hairD);
-    } else if (away) {
-      skull();
-      put(h(-1, 1.2), h(-1, -0.6), 4.5, 4, hair, hairD);
-    } else {
-      skull();
-      nose();
-      put(h(-2.4, -0.6), h(-1.6, 1.8), 2.2, 2.9, hair, hairD);
-      put(h(-1.4, 2.7), h(2.1, 2.8), 2.4, 1.8, hair, hairD);
-    }
-  };
-  /** Draw behind the skull unless the back of the head faces us. */
-  const behind = (extra: () => void, rest: () => void) => {
-    if (away) {
-      rest();
-      extra();
-    } else {
-      extra();
-      rest();
-    }
+    skull();
+    put(h(-2.4, -0.45), h(-1.8, 1.7), 2.35, 3.45, hair, hairD);
+    put(h(-1.5, 2.8), h(1.55, 3.15), 2.5, 2.35, hair, hairD);
+    if (!toward && !away) nose();
   };
 
   switch (c.head) {
@@ -74,32 +63,24 @@ export function drawHead(
       ears();
       break;
     case "ponytail":
-      behind(() => {
-        put(h(-4, 1.8), h(-6.4, -2.8), 1.8, 1, hair, hairD);
-        ball(h(-4.2, 1.8), 1.3, 0xe05a6c);
-      }, hairCap);
+      put(h(-4, 1.8), h(-6.4, -2.8), 1.8, 1, hair, hairD);
+      ball(h(-4.2, 1.8), 1.3, 0xe05a6c);
+      hairCap();
       eyes(line);
       ears();
       break;
     case "bun":
-      behind(() => ball(h(-2.2, 5), 2.2, hair, hairD), hairCap);
+      ball(h(-2.2, 5), 2.2, hair, hairD);
+      hairCap();
       eyes(line);
       ears();
       break;
     case "curly":
-      if (away) {
-        skull();
-        ball(h(-0.6, 1), 5.2, hair, hairD);
-      } else {
-        if (toward) ball(h(-0.6, 1.2), 5.3, hair, hairD);
-        else {
-          ball(h(-2, 1), 4.3, hair, hairD);
-          ball(h(0.2, 2.8), 3.6, hair, hairD);
-        }
-        put(h(1.2, -0.2), h(1.1, -1.6), 3.4, 3, skin, skinD);
-        if (!toward) nose();
-        put(h(-0.8, 3.4, -1.4), h(1.8, 3.2, 1.4), 2.2, 1.9, hair, hairD);
-      }
+      skull();
+      ball(h(-2.2, 0.8), 3.7, hair, hairD);
+      put(h(-1.2, 2.9, -1.25), h(0.15, 3.15, 1.3), 2.8, 2.65, hair, hairD);
+      ball(h(1.15, 3.25, -0.9), 2.1, hair, hairD);
+      if (!toward && !away) nose();
       eyes(line);
       break;
     case "bald":
@@ -150,7 +131,7 @@ export function drawHead(
       ball(h(0, 6.8), 1.1, accent);
       put(h(0, 1.2), h(0.1, -1.4), 4.5, 4.2, skin, skinD);
       for (const s of SIDES)
-        if (R[2] * sign(s) > 0.3)
+        if (right * sign(s) > 0.3)
           ball(h(-0.8, -0.2, 3.4 * sign(s)), 1.3, hair, hairD);
       if (!away) {
         put(h(2.2, 0.2, -1.9), h(2.2, 0.2, 1.9), 1.7, 1.7, 0x22283a);
