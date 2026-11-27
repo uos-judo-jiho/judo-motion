@@ -75,18 +75,18 @@ pnpm run export -t seoi-nage --tori bear --uke cat --toriGi black --ukeGi red
 ## 다른 프로젝트에서 쓰기
 
 ```
-pnpm add https://github.com/uos-judo-jiho/judo-motion/releases/download/v0.1.0/judo-motion-0.1.0.tgz
+pnpm add @uos-judo-jiho/judo-motion
 ```
 
 React 19 (SSR 지원):
 
 ```tsx
-import { JudoMotion } from "judo-motion/react";
+import { JudoMotion } from "@uos-judo-jiho/judo-motion/react";
 
 <JudoMotion technique="seoi-nage" tori="bear" uke="cat" mat className="w-48" />;
 ```
 
-그 외 번들러는 `import "judo-motion"` 후 `<judo-motion technique="seoi-nage"></judo-motion>`을 씁니다. 번들러가 없으면 Release의 `judo-motion.js` 하나를 `<script type="module">`로 불러옵니다.
+그 외 번들러는 `import "@uos-judo-jiho/judo-motion"` 후 `<judo-motion technique="seoi-nage"></judo-motion>`을 씁니다. 번들러가 없으면 Release의 `judo-motion.js` 하나를 `<script type="module">`로 불러옵니다.
 
 - 속성: `technique` `view`(`front`/`three-quarter`/`side`) `tori` `uke` `tori-gi` `uke-gi` `grid`(64/96/128) `fps`(0=화면 주사율) `speed` `paused` `mat`(빈 값/`wide`)
 - 프로퍼티: `view` `currentTime`(초) `info` `onFrame`
@@ -95,11 +95,21 @@ import { JudoMotion } from "judo-motion/react";
 
 ### 릴리스
 
-`package.json`의 version을 올려 병합한 뒤 같은 이름의 태그를 올리면 Release가 만들어집니다.
+버전을 올린 변경을 `main`에 반영한 뒤 `package.json`의 버전과 같은 태그를 올립니다. 워크플로는 검사를 통과한 패키지와 단일 JS를 GitHub Release에 첨부합니다.
 
+```sh
+git tag v0.1.1
+git push origin v0.1.1
 ```
-git tag v0.1.1 && git push origin v0.1.1
+
+첫 npm 게시는 npm 조직의 게시 권한이 있는 계정으로 GitHub Release의 패키지 파일을 받아 진행합니다.
+
+```sh
+gh release download v0.1.1 --pattern judo-motion-0.1.1.tgz
+npm publish ./judo-motion-0.1.1.tgz --access public
 ```
+
+패키지가 생성되면 npm 패키지 설정에서 Trusted Publisher를 추가합니다. GitHub 조직은 `uos-judo-jiho`, 저장소는 `judo-motion`, 워크플로 파일은 `release.yml`로 설정하고 `npm publish` 권한을 허용합니다. 다음 태그부터 GitHub Release에 첨부한 패키지를 같은 워크플로에서 OIDC로 npm에 게시합니다. [npm Trusted Publishing](https://docs.npmjs.com/trusted-publishers/)
 
 ## 개발
 
